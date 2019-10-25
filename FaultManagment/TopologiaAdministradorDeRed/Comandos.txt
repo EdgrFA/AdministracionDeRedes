@@ -1,0 +1,19 @@
+-- Comandos utilizados en la practica:
+
+--Instalar Servidor tftp
+sudo apt install tftpd-hpa
+sudo nano /etc/default/tftpd-hpa
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# /etc/default/tftpd-hpa
+
+TFTP_USERNAME="tftp"
+TFTP_DIRECTORY="/srv/tftp"
+TFTP_ADDRESS=":69"
+TFTP_OPTIONS="--secure --create"
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+sudo mkdir /srv/tftp
+sudo chown tftp:tftp /srv/tftp
+sudo chmod -R 777 /srv/tftp
+sudo service tftpd-hpa restart

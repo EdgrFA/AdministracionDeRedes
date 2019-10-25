@@ -1,0 +1,34 @@
+//Prueba de funcionamiento
+#snmpget -u bootstrap -l authPriv -a MD5 -x DES -A temp_password -X temp_password localhost 1.3.6.1.2.1.1.1.0
+
+//Prueba 
+#snmpusm -u bootstrap -l authPriv -a MD5 -x DES -A temp_password -X temp_password localhost create demo bootstrap
+
+//Conexion con router 1
+#snmpwalk -u USER1 -l authPriv -a SHA -x AES -A password -X password 192.168.0.1 1.3.6.1.2.1.2
+
+//Configuracion SNMPv3 Trapsv3
+no ip domain lookup
+R1(config)# ip access-list standard PERMIT-ADMIN
+R1(config-std-nacl)# permit 192.168.0.2 0.0.0.255
+R1(config-std-nacl)# exit
+R1(config)# snmp-server view SNMP-RO iso included
+R1(config)# snmp-server group ADMIN v3 priv read SNMP-RO access PERMIT-ADMIN
+R1(config)# snmp-server user RUSER ADMIN v3 auth sha password pri aes 128 password
+R1(config)# snmp-server host 192.168.0.2 version 3 priv RXUSER
+R1(config)# snmp-server enable traps
+
+//Configuraon smptrap v3
+sudo systemctl daemon-reload
+sudo systemctl enable snmptrapd
+systemctl status snmptrapd.service
+sudo systemctl restart snmptrapd
+
+//Configuraciones
+systemctl status snmptrapd.service
+sudo subl /etc/snmp/snmptrapd.conf
+chmod +x 
+
+//Prueba
+snmptrap -v 3 -e 0x800000090300CA01458D0008 -u USER1 -a SHA -A password -x AES -X password localhost '' NET-SNMP-EXAMPLES-MIB::netSnmpExampleHeartbeatNotification netSnmpExampleHeartbeatRate i 123456
+

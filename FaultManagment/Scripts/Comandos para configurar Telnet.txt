@@ -1,0 +1,44 @@
+%%Comandos para configurar Telnet
+
+//Se configura la contrasena para entrar en el modo enable
+enable secret '1234'
+
+#line vty 0 4  //total five (0 to 4) users can access the switch remotely at a time.
+#password 123456
+#login
+
+%%Comandos para obtener el archivo de configuracion
+
+copy running-config tftp:
+192.168.0.2
+archivo_configuracion_r1
+
+%%Lineas que se deben agregar al archivo
+
+//Cambiar en interface FastEthernet2/0
+
+!
+interface FastEthernet0/1
+ no ip address
+ shutdown
+
+ 
+//por
+
+!
+interface FastEthernet2/0
+ no ip address
+ shutdown
+
+!
+ router ospf 1
+ redistribute static
+ network 192.168.22.0 0.0.0.255 area 0
+!
+
+ %%Para restaurar el archivo
+
+ copy tftp: running-config
+ 192.168.0.2
+ archivo_configuracion_r1
+ running-config

@@ -1,0 +1,46 @@
+Oct 14 05:29:07.545 HYPERVISOR: Release 0.2.21-amd64/Linux (tag 2019071212)
+Oct 14 05:29:07.545 HYPERVISOR: Started on TCP port = 46271.
+Oct 14 05:29:07.555 HYPERVISOR: exec_cmd: hypervisor version 
+Oct 14 05:29:07.555 HYPERVISOR: exec_cmd: hypervisor working_dir /media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips 
+Oct 14 05:29:07.555 GENERAL: working_dir=/media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips
+Oct 14 05:29:07.555 HYPERVISOR: exec_cmd: hypervisor working_dir /media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips/170bc3d8-ac65-4e9d-9fb7-c57e3cf78f8a 
+Oct 14 05:29:07.555 GENERAL: working_dir=/media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips/170bc3d8-ac65-4e9d-9fb7-c57e3cf78f8a
+Oct 14 05:29:07.555 HYPERVISOR: exec_cmd: vm create R4 4 c7200 
+Oct 14 05:29:07.556 VM: VM R4 created.
+Oct 14 05:29:07.556 HYPERVISOR: exec_cmd: vm set_con_tcp_port R4 5029 
+Oct 14 05:29:07.556 HYPERVISOR: exec_cmd: c7200 get_mac_addr R4 
+Oct 14 05:29:07.556 HYPERVISOR: exec_cmd: vm get_status R4 
+Oct 14 05:29:07.556 HYPERVISOR: exec_cmd: vm slot_add_binding R4 0 0 C7200-IO-FE 
+Oct 14 05:29:07.556 HYPERVISOR: exec_cmd: vm set_disk0 R4 0 
+Oct 14 05:29:07.557 HYPERVISOR: exec_cmd: vm set_ios R4 /home/edgrfa/GNS3/images/IOS/c7200-adventerprisek9-mz.152-4.M7.image 
+Oct 14 05:29:07.557 HYPERVISOR: exec_cmd: c7200 set_mac_addr R4 ca04.45ba.0000 
+Oct 14 05:29:07.557 HYPERVISOR: exec_cmd: vm set_nvram R4 512 
+Oct 14 05:29:07.557 HYPERVISOR: exec_cmd: vm set_ram R4 512 
+Oct 14 05:29:07.558 HYPERVISOR: exec_cmd: vm get_status R4 
+Oct 14 05:29:07.558 HYPERVISOR: exec_cmd: vm slot_remove_binding R4 0 0 
+Oct 14 05:29:07.558 HYPERVISOR: exec_cmd: vm get_status R4 
+Oct 14 05:29:07.558 HYPERVISOR: exec_cmd: vm slot_add_binding R4 0 0 C7200-IO-2FE 
+Oct 14 05:29:07.558 HYPERVISOR: exec_cmd: vm get_status R4 
+Oct 14 05:29:07.558 HYPERVISOR: exec_cmd: vm slot_add_binding R4 1 0 PA-FE-TX 
+Oct 14 05:29:07.559 HYPERVISOR: exec_cmd: vm get_status R4 
+Oct 14 05:29:07.559 HYPERVISOR: exec_cmd: vm slot_add_binding R4 2 0 PA-FE-TX 
+Oct 14 05:29:07.559 HYPERVISOR: exec_cmd: vm get_status R4 
+Oct 14 05:29:07.559 HYPERVISOR: exec_cmd: vm slot_add_binding R4 3 0 PA-FE-TX 
+Oct 14 05:29:07.559 HYPERVISOR: exec_cmd: vm get_status R4 
+Oct 14 05:29:07.559 HYPERVISOR: exec_cmd: vm slot_add_binding R4 4 0 PA-4T+ 
+Oct 14 05:29:10.356 HYPERVISOR: exec_cmd: nio create_udp udp-710c4a6b-305a-472b-90d6-09ffdd22dc68 10040 127.0.0.1 10041 
+Oct 14 05:29:10.563 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R4 0 0 udp-710c4a6b-305a-472b-90d6-09ffdd22dc68 
+Oct 14 05:29:10.563 HYPERVISOR: exec_cmd: vm get_status R4 
+Oct 14 05:29:10.643 HYPERVISOR: exec_cmd: nio create_udp udp-d0d2344f-2133-46f9-8289-cf039c2f15b9 10044 127.0.0.1 10045 
+Oct 14 05:29:10.644 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R4 2 0 udp-d0d2344f-2133-46f9-8289-cf039c2f15b9 
+Oct 14 05:29:10.644 HYPERVISOR: exec_cmd: vm get_status R4 
+Oct 14 05:29:14.747 HYPERVISOR: exec_cmd: nio create_udp udp-4100ff59-961a-44b1-a6a4-d623ee6f96ea 10152 127.0.0.1 10153 
+Oct 14 05:29:14.748 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R4 3 0 udp-4100ff59-961a-44b1-a6a4-d623ee6f96ea 
+Oct 14 05:29:14.749 HYPERVISOR: exec_cmd: vm get_status R4 
+Oct 14 09:35:29.458 HYPERVISOR: exec_cmd: vm get_status R4 
+Oct 14 09:35:29.459 HYPERVISOR: exec_cmd: vm extract_config R4 
+Oct 14 09:35:29.460 HYPERVISOR: exec_cmd: vm delete R4 
+Oct 14 09:35:29.461 VM: VM R4 destroyed.
+Oct 14 09:35:29.465 HYPERVISOR: exec_cmd: hypervisor stop 
+Oct 14 09:35:29.964 HYPERVISOR: Stopped.
+Oct 14 09:35:29.991 GENERAL: reset done.

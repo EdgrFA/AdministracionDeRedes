@@ -1,0 +1,2 @@
+//Comando routers obtener ips conectados localmente
+sh ip route connected | include L       

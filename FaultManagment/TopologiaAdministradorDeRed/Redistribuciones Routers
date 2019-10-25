@@ -1,0 +1,25 @@
+FUnete: https://todopacketracer.com/2012/06/06/distrubucion-de-rutas-entre-protocolos-rip-eigrp-ospf/
+
+ROUTER 1: 
+
+router ospf 1
+redistribute static
+
+ROUTER 11:
+
+router rip
+redistribute ospf 1 match external 
+redistribute eigrp [AS] metric 2
+
+router eigrp 10
+redistribute ospf 1 metric 10000 100 255 1 1500
+redistribute rip metric 10000 10 255 1 1500
+
+
+ROUTER 17:
+
+router eigrp 10
+edistribute rip metric 10000 10 255 1 1500
+
+router rip
+redistribute eigrp 10 metric 2

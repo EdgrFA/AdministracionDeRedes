@@ -1,0 +1,15 @@
+https://www.maketecheasier.com/net-snmp-part-1/
+
+https://www.maketecheasier.com/net-snmp-part-2/
+
+http://net-snmp.sourceforge.net/wiki/index.php/Tutorials
+
+http://net-snmp.sourceforge.net/wiki/index.php/TUT:Configuring_snmptrapd_to_receive_SNMPv3_notifications
+
+http://www.net-snmp.org/docs/man/snmptrapd.conf.html
+
+https://sourceforge.net/p/net-snmp/bugs/1706/
+
+http://search.cpan.org/~hardaker/NetSNMP-TrapReceiver-5.0301/TrapReceiver.pm
+
+https://metacpan.org/pod/Net::SNMPTrapd

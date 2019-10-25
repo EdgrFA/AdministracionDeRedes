@@ -1,0 +1,69 @@
+Oct 14 05:29:07.469 HYPERVISOR: Release 0.2.21-amd64/Linux (tag 2019071212)
+Oct 14 05:29:07.469 HYPERVISOR: Started on TCP port = 42801.
+Oct 14 05:29:07.470 HYPERVISOR: exec_cmd: hypervisor version 
+Oct 14 05:29:07.470 HYPERVISOR: exec_cmd: hypervisor working_dir /media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips 
+Oct 14 05:29:07.470 GENERAL: working_dir=/media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips
+Oct 14 05:29:07.471 HYPERVISOR: exec_cmd: hypervisor working_dir /media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips/feedbe1f-4007-4bd8-806d-008e289a6ed5 
+Oct 14 05:29:07.471 GENERAL: working_dir=/media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips/feedbe1f-4007-4bd8-806d-008e289a6ed5
+Oct 14 05:29:07.471 HYPERVISOR: exec_cmd: vm create R1 1 c7200 
+Oct 14 05:29:07.471 VM: VM R1 created.
+Oct 14 05:29:07.471 HYPERVISOR: exec_cmd: vm set_con_tcp_port R1 5026 
+Oct 14 05:29:07.471 HYPERVISOR: exec_cmd: c7200 get_mac_addr R1 
+Oct 14 05:29:07.471 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 05:29:07.472 HYPERVISOR: exec_cmd: vm slot_add_binding R1 0 0 C7200-IO-FE 
+Oct 14 05:29:07.472 HYPERVISOR: exec_cmd: vm set_disk0 R1 0 
+Oct 14 05:29:07.472 HYPERVISOR: exec_cmd: vm set_ios R1 /home/edgrfa/GNS3/images/IOS/c7200-adventerprisek9-mz.152-4.M7.image 
+Oct 14 05:29:07.472 HYPERVISOR: exec_cmd: c7200 set_mac_addr R1 ca01.458d.0000 
+Oct 14 05:29:07.473 HYPERVISOR: exec_cmd: vm set_nvram R1 512 
+Oct 14 05:29:07.473 HYPERVISOR: exec_cmd: vm set_ram R1 512 
+Oct 14 05:29:07.473 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 05:29:07.473 HYPERVISOR: exec_cmd: vm slot_remove_binding R1 0 0 
+Oct 14 05:29:07.473 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 05:29:07.473 HYPERVISOR: exec_cmd: vm slot_add_binding R1 0 0 C7200-IO-2FE 
+Oct 14 05:29:07.474 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 05:29:07.474 HYPERVISOR: exec_cmd: vm slot_add_binding R1 1 0 PA-FE-TX 
+Oct 14 05:29:07.474 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 05:29:07.474 HYPERVISOR: exec_cmd: vm slot_add_binding R1 2 0 PA-FE-TX 
+Oct 14 05:29:07.474 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 05:29:07.474 HYPERVISOR: exec_cmd: vm slot_add_binding R1 3 0 PA-FE-TX 
+Oct 14 05:29:07.474 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 05:29:07.474 HYPERVISOR: exec_cmd: vm slot_add_binding R1 4 0 PA-4T+ 
+Oct 14 05:29:08.357 HYPERVISOR: exec_cmd: nio create_udp udp-9f8b9237-370a-48ad-bd3a-9ce27486f5d1 10002 127.0.0.1 10003 
+Oct 14 05:29:08.564 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R1 2 0 udp-9f8b9237-370a-48ad-bd3a-9ce27486f5d1 
+Oct 14 05:29:08.564 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 05:29:09.740 HYPERVISOR: exec_cmd: nio create_udp udp-f5b31464-58b9-4ffe-8bd2-1d502ebe03ab 10026 127.0.0.1 10027 
+Oct 14 05:29:09.741 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R1 1 0 udp-f5b31464-58b9-4ffe-8bd2-1d502ebe03ab 
+Oct 14 05:29:09.741 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 05:29:14.852 HYPERVISOR: exec_cmd: nio create_udp udp-77cf4d21-6ab2-4349-8488-ddc763943ab2 10158 127.0.0.1 10159 
+Oct 14 05:29:14.853 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R1 0 0 udp-77cf4d21-6ab2-4349-8488-ddc763943ab2 
+Oct 14 05:29:14.853 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 05:29:20.494 HYPERVISOR: exec_cmd: vm create Ghost 0 c7200 
+Oct 14 05:29:20.494 VM: VM Ghost created.
+Oct 14 05:29:20.495 HYPERVISOR: exec_cmd: vm set_ios Ghost /home/edgrfa/GNS3/images/IOS/c7200-adventerprisek9-mz.152-4.M7.image 
+Oct 14 05:29:20.495 HYPERVISOR: exec_cmd: vm set_ghost_status Ghost 1 
+Oct 14 05:29:20.495 HYPERVISOR: exec_cmd: vm set_ghost_file Ghost /media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips/c7200-adventerprisek9-mz.152-4.M7.image-512.ghost 
+Oct 14 05:29:20.495 HYPERVISOR: exec_cmd: vm set_ram Ghost 512 
+Oct 14 05:29:20.496 HYPERVISOR: exec_cmd: vm get_status Ghost 
+Oct 14 05:29:20.496 HYPERVISOR: exec_cmd: vm set_config Ghost configs/i0_startup-config.cfg 
+Oct 14 05:29:20.496 HYPERVISOR: exec_cmd: vm start Ghost 
+Oct 14 05:29:20.822 HYPERVISOR: exec_cmd: vm get_status Ghost 
+Oct 14 05:29:20.823 HYPERVISOR: exec_cmd: vm stop Ghost 
+Oct 14 05:29:22.263 VM: VM Ghost shutdown.
+Oct 14 05:29:22.264 HYPERVISOR: exec_cmd: vm extract_config Ghost 
+Oct 14 05:29:22.264 HYPERVISOR: exec_cmd: vm clean_delete Ghost 
+Oct 14 05:29:22.264 VM: VM Ghost destroyed.
+Oct 14 05:29:22.266 HYPERVISOR: exec_cmd: vm set_ghost_status R1 2 
+Oct 14 05:29:22.266 HYPERVISOR: exec_cmd: vm set_ghost_file R1 /media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips/c7200-adventerprisek9-mz.152-4.M7.image-512.ghost 
+Oct 14 05:29:22.266 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 05:29:22.267 HYPERVISOR: exec_cmd: vm set_config R1 configs/i1_startup-config.cfg configs/i1_private-config.cfg 
+Oct 14 05:29:22.267 HYPERVISOR: exec_cmd: vm start R1 
+Oct 14 05:29:52.481 HYPERVISOR: exec_cmd: vm extract_config R1 
+Oct 14 09:35:29.463 HYPERVISOR: exec_cmd: vm get_status R1 
+Oct 14 09:35:29.466 HYPERVISOR: exec_cmd: vm stop R1 
+Oct 14 09:35:30.232 VM: VM R1 shutdown.
+Oct 14 09:35:30.249 HYPERVISOR: exec_cmd: vm extract_config R1 
+Oct 14 09:35:30.290 HYPERVISOR: exec_cmd: vm delete R1 
+Oct 14 09:35:30.291 VM: VM R1 destroyed.
+Oct 14 09:35:30.291 HYPERVISOR: exec_cmd: hypervisor stop 
+Oct 14 09:35:30.457 HYPERVISOR: Stopped.
+Oct 14 09:35:30.457 GENERAL: reset done.

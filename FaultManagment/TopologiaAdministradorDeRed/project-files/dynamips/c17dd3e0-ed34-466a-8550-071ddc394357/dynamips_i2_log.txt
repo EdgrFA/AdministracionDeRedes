@@ -1,0 +1,54 @@
+Oct 14 05:29:07.488 HYPERVISOR: Release 0.2.21-amd64/Linux (tag 2019071212)
+Oct 14 05:29:07.489 HYPERVISOR: Started on TCP port = 56733.
+Oct 14 05:29:07.498 HYPERVISOR: exec_cmd: hypervisor version 
+Oct 14 05:29:07.498 HYPERVISOR: exec_cmd: hypervisor working_dir /media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips 
+Oct 14 05:29:07.498 GENERAL: working_dir=/media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips
+Oct 14 05:29:07.498 HYPERVISOR: exec_cmd: hypervisor working_dir /media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips/c17dd3e0-ed34-466a-8550-071ddc394357 
+Oct 14 05:29:07.498 GENERAL: working_dir=/media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips/c17dd3e0-ed34-466a-8550-071ddc394357
+Oct 14 05:29:07.499 HYPERVISOR: exec_cmd: vm create R2 2 c7200 
+Oct 14 05:29:07.499 VM: VM R2 created.
+Oct 14 05:29:07.499 HYPERVISOR: exec_cmd: vm set_con_tcp_port R2 5027 
+Oct 14 05:29:07.499 HYPERVISOR: exec_cmd: c7200 get_mac_addr R2 
+Oct 14 05:29:07.499 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 05:29:07.499 HYPERVISOR: exec_cmd: vm slot_add_binding R2 0 0 C7200-IO-FE 
+Oct 14 05:29:07.500 HYPERVISOR: exec_cmd: vm set_disk0 R2 0 
+Oct 14 05:29:07.500 HYPERVISOR: exec_cmd: vm set_ios R2 /home/edgrfa/GNS3/images/IOS/c7200-adventerprisek9-mz.152-4.M7.image 
+Oct 14 05:29:07.500 HYPERVISOR: exec_cmd: c7200 set_mac_addr R2 ca02.459c.0000 
+Oct 14 05:29:07.500 HYPERVISOR: exec_cmd: vm set_nvram R2 512 
+Oct 14 05:29:07.501 HYPERVISOR: exec_cmd: vm set_ram R2 512 
+Oct 14 05:29:07.501 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 05:29:07.501 HYPERVISOR: exec_cmd: vm slot_remove_binding R2 0 0 
+Oct 14 05:29:07.501 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 05:29:07.501 HYPERVISOR: exec_cmd: vm slot_add_binding R2 0 0 C7200-IO-2FE 
+Oct 14 05:29:07.501 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 05:29:07.501 HYPERVISOR: exec_cmd: vm slot_add_binding R2 1 0 PA-FE-TX 
+Oct 14 05:29:07.502 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 05:29:07.502 HYPERVISOR: exec_cmd: vm slot_add_binding R2 2 0 PA-FE-TX 
+Oct 14 05:29:07.502 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 05:29:07.502 HYPERVISOR: exec_cmd: vm slot_add_binding R2 3 0 PA-FE-TX 
+Oct 14 05:29:07.502 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 05:29:07.502 HYPERVISOR: exec_cmd: vm slot_add_binding R2 4 0 PA-4T+ 
+Oct 14 05:29:09.748 HYPERVISOR: exec_cmd: nio create_udp udp-77fb7876-cd56-42c6-afa0-51e3a6ffed34 10028 127.0.0.1 10029 
+Oct 14 05:29:09.955 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R2 3 0 udp-77fb7876-cd56-42c6-afa0-51e3a6ffed34 
+Oct 14 05:29:09.955 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 05:29:10.034 HYPERVISOR: exec_cmd: nio create_udp udp-2e91502c-27bc-41bf-8900-a2c36cba77bc 10032 127.0.0.1 10033 
+Oct 14 05:29:10.035 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R2 2 0 udp-2e91502c-27bc-41bf-8900-a2c36cba77bc 
+Oct 14 05:29:10.035 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 05:29:10.348 HYPERVISOR: exec_cmd: nio create_udp udp-59e92d2d-a576-41ba-89df-7d2f1b56ac98 10038 127.0.0.1 10039 
+Oct 14 05:29:10.349 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R2 1 0 udp-59e92d2d-a576-41ba-89df-7d2f1b56ac98 
+Oct 14 05:29:10.349 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 05:33:32.547 HYPERVISOR: exec_cmd: vm set_ghost_status R2 2 
+Oct 14 05:33:32.548 HYPERVISOR: exec_cmd: vm set_ghost_file R2 /media/edgrfa/DATA/UbuntuFiles/FaultManagment/TopologiaAdministradorDeRed/project-files/dynamips/c7200-adventerprisek9-mz.152-4.M7.image-512.ghost 
+Oct 14 05:33:32.548 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 05:33:32.548 HYPERVISOR: exec_cmd: vm set_config R2 configs/i2_startup-config.cfg configs/i2_private-config.cfg 
+Oct 14 05:33:32.549 HYPERVISOR: exec_cmd: vm start R2 
+Oct 14 05:34:02.766 HYPERVISOR: exec_cmd: vm extract_config R2 
+Oct 14 09:35:29.469 HYPERVISOR: exec_cmd: vm get_status R2 
+Oct 14 09:35:29.473 HYPERVISOR: exec_cmd: vm stop R2 
+Oct 14 09:35:30.238 VM: VM R2 shutdown.
+Oct 14 09:35:30.249 HYPERVISOR: exec_cmd: vm extract_config R2 
+Oct 14 09:35:30.255 HYPERVISOR: exec_cmd: vm delete R2 
+Oct 14 09:35:30.255 VM: VM R2 destroyed.
+Oct 14 09:35:30.256 HYPERVISOR: exec_cmd: hypervisor stop 
+Oct 14 09:35:30.462 HYPERVISOR: Stopped.
+Oct 14 09:35:30.462 GENERAL: reset done.

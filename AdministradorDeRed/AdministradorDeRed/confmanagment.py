@@ -1,35 +1,92 @@
+from multiprocessing.pool import ThreadPool
 import telnetconnection
+import threading
 import json
+import os
+
+tftpServerPath = '/srv/tftp/'
+tftpHost = '192.168.0.2'
+
+def getDeviceInfo(ip, password, enable_password):
+    tn, mssg = telnetconnection.conectar_telnet(ip, password, enable_password)
+    if tn == None:
+        return None
+    hostname = telnetconnection.obtener_nombre_host(tn)
+    localnets = telnetconnection.obtener_subredes_telnet(tn, False, 'L')
+    print(hostname + ", " + str(localnets))
+    ln = []
+    for localnet in localnets:
+        ln.append(localnet)
+
+    device = []
+    device.append({
+        'name': hostname,
+        'localip' : ln,
+        'password' : password,
+        'enable' : enable_password,
+        'configfile': 'configFile' + hostname
+    })
+    return device
 
 
 def getTelnetDevices(topology, password, enable_password):
     devices = {}
     devices['dispositivo'] = []
-    #Consultar todos los dispositivos
+    #Consultar todos los routers
     for subred in topology['subred']:
+        pool = ThreadPool(processes=5)
+        async_results = []
         for host in subred['host']:
-            devices.append(host)
-    ##Conectar con telnet
-    for device in devices:
-        tn, mssg = telnetconnection.conectar_telnet(device, password, enable_password)
+            #Comprobar si la ip corresponde con un router ya consultado
+            exist = False
+            for device in devices['dispositivo']:
+                for ip in device['localip']:
+                    if ip == host:
+                        exist = True
+                        break
+            if exist:
+                continue
+            #Ejecutar hilos para obtener la informacion de los routers
+            async_results.append(pool.apply_async(getDeviceInfo, (host, password, enable_password)))
+        pool.close()
+        pool.join()
+        for async_result in async_results:
+            result = async_result.get()
+            if result != None:
+                devices['dispositivo'].extend(result)
+    return devices
+
+
+def getConfigFile(device):
+    for ip in device['localip']:
+        tn, mssg = telnetconnection.conectar_telnet(ip, device['password'], device['enable'])
         if tn == None:
-            print(mssg)
-        else:
-            print(mssg)
+            continue
+        success = telnetconnection.obtener_archivo_configuracion(tn, tftpHost, device['configfile'])
+        if success:
+            return True
+    return False
+
+#Faltaria revisar los cambios mientras el servidor no estaba arriba
+def getConfigFiles(devices):
+    threads = list()
+    for device in devices['dispositivo']:
+        if os.path.exists(tftpServerPath + device['configfile']):
+            print('Ya existe: ' + device['configfile'])
+            continue
+        t = threading.Thread(target = getConfigFile, args = (device,))
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join()
+
     return
 
 
+"""
 filenameTopology = 'AdministradorDeRed/utils/topology.json'
 
 with open(filenameTopology, 'r') as json_data:
     data = json.load(json_data)
     getTelnetDevices(data, '1234', '1234')
-
-"""
-data['subred'].append({
-    'id': self.strIdSubred,
-    'mascara' : self.strMascara,
-    'broadcast': self.strBroadcast,
-    'host' : hostData
-})
 """

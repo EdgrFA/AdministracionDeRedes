@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, abort
 import faultmanagment
-#import confmanagment
+import confmanagment
 import telnetconnection
 import pingpuller
 import threading
@@ -13,6 +13,7 @@ app = Flask(__name__)
 app.secret_key = "12345"
 filenameTopology = 'AdministradorDeRed/utils/topology.json'
 filenameDevicesConfig = 'AdministradorDeRed/utils/devicesConfigfile.json'
+
 
 @app.route('/')
 def index():
@@ -44,6 +45,7 @@ def getPingPuller():
         return data
     return render_template('index.html')
 
+
 @app.route('/fault-managment', methods=['GET', 'POST'])
 def getFaultManagment():
     if request.method == 'GET':
@@ -65,6 +67,7 @@ def getFaultManagment():
         return data
     return render_template('index.html')
 
+
 @app.route('/config-managment', methods=['GET', 'POST'])
 def getConfigManagment():
     if request.method == 'GET':        
@@ -76,23 +79,37 @@ def getConfigManagment():
         else:
             return render_template('ping-puller.html')
     if request.method == 'POST':
-        pass
+        data = None
+        with open(filenameDevicesConfig, 'r') as json_data:
+            data = json.load(json_data)
+        confmanagment.getConfigFiles(data)
+        return data
     return render_template('index.html')
 
-@app.route('/connect-devices', methods=['POST'])
+
+@app.route('/connect-devices', methods=['GET', 'POST'])
 def connectDevices():
+    if request.method == 'GET':
+        if  os.path.exists(filenameTopology):
+            return render_template('connect-devices.html')
+        else:
+            return render_template('ping-puller.html')
+
     if request.method == 'POST':
         passsword = request.form['telnet_password']
         enable_password = request.form['enable_password']
         try:
-            with open(filenameTraps, 'r') as json_data:
+            data = None
+            with open(filenameTopology, 'r') as json_data:
                 data = json.load(json_data)
-                devices = confmanagment.getTelnetDevices(data, passsword, enable_password)
+            devices = confmanagment.getTelnetDevices(data, passsword, enable_password)
+            file = open(filenameDevicesConfig, 'w') 
+            file.write(json.dumps(devices))
+            return render_template('config-managment.html')
         except:
-            pass
+            abort(502)
         #Revisar si sigue existiendo topology.json
-        
-    return
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host="127.0.0.1", port=int("8080"), debug=True)

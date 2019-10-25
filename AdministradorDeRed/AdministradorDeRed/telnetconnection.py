@@ -42,10 +42,15 @@ def conectar_telnet(ip, passwordTelnet, passwordEnable = None):
 	return tn, mssg
 
 
-def obtener_subredes_telnet(tn, tipo = None):
+def obtener_subredes_telnet(tn, mask = True, tipo = None):
 	routeTable = b""
 	#Expresion regular de una subred
-	patron = re.compile('\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/\\d{1,2}')
+	patron = None
+	if mask:
+		patron = re.compile('\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/\\d{1,2}')
+	else:
+		patron = re.compile('\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}')
+
 	#Filtrar subredes
 	if tipo == None:
 		tn.write(b'show ip route list subnets | exclude L        \n')
@@ -62,6 +67,26 @@ def obtener_subredes_telnet(tn, tipo = None):
 	routeTable = routeTable.decode('utf8')
 	return set(patron.findall(routeTable))
 
+
 def obtener_nombre_host(tn):
 	tn.write(b'\n')
-	hostname = 'equisde'
+	tn.read_until(b'\n', 2)
+	hostname = tn.read_until(b'#', 2).decode('utf8')
+	return hostname[0:len(hostname)-1]
+
+
+def obtener_archivo_configuracion(tn, tftpServerHost, fileName):
+	lh = tftpServerHost.encode('utf-8')
+	fn = fileName.encode('utf-8')
+
+	tn.write(b'copy running-config tftp:\n')
+	
+	tn.read_until(b'Address or name of remote host []? ', 5)
+	tn.write(lh + b'\n')
+	
+	tn.read_until(b'Destination filename ', 5)
+	tn.write(fn + b'\n')
+
+	tn.read_until(b'#', 5)
+	print('Se obtuvo archivo: ' + fileName)
+	return True

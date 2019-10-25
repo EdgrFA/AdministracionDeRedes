@@ -1,6 +1,7 @@
 from multiprocessing.pool import ThreadPool
 import telnetconnection
 import threading
+import shutil 
 import json
 import os
 
@@ -57,29 +58,43 @@ def getTelnetDevices(topology, password, enable_password):
     return devices
 
 
-def getConfigFile(device):
+def getConfigFile(device, filename =None):
+    if filename == None:
+        filename = device['name']
+    if not os.path.isdir(tftpServerPath + device['name']):
+        os.mkdir(tftpServerPath + device['name'])
+
     for ip in device['localip']:
         tn, mssg = telnetconnection.conectar_telnet(ip, device['password'], device['enable'])
         if tn == None:
             continue
-        success = telnetconnection.obtener_archivo_configuracion(tn, tftpHost, device['configfile'])
+        success = telnetconnection.obtener_archivo_configuracion(tn, tftpHost, filename)
+
         if success:
+            while(True):
+                try:
+                    shutil.move(os.path.join(tftpServerPath, filename), os.path.join(tftpServerPath + device['name'], filename))
+                    break
+                except Exception as e:
+                    print(e)
+                    continue
             return True
     return False
+
 
 #Faltaria revisar los cambios mientras el servidor no estaba arriba
 def getConfigFiles(devices):
     threads = list()
     for device in devices['dispositivo']:
-        if os.path.exists(tftpServerPath + device['configfile']):
-            print('Ya existe: ' + device['configfile'])
-            continue
-        t = threading.Thread(target = getConfigFile, args = (device,))
+        pathFile =  device['name'] + "/" + device['configfile']
+        if os.path.exists(tftpServerPath + pathFile):
+            t = threading.Thread(target = getConfigFile, args = (device, 'SYSCONFIG' + device['configfile']))
+        else:
+            t = threading.Thread(target = getConfigFile, args = (device, ))
         threads.append(t)
         t.start()
     for t in threads:
         t.join()
-
     return
 
 

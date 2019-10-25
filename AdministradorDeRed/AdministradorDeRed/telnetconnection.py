@@ -87,6 +87,6 @@ def obtener_archivo_configuracion(tn, tftpServerHost, fileName):
 	tn.read_until(b'Destination filename ', 5)
 	tn.write(fn + b'\n')
 
-	tn.read_until(b'#', 5)
+	tn.read_until(b'#', 15)
 	print('Se obtuvo archivo: ' + fileName)
 	return True

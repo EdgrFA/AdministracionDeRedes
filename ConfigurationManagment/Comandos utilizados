@@ -1,2 +1,5 @@
 //Comando routers obtener ips conectados localmente
 sh ip route connected | include L       
+
+//Alerta configuracion desde consola
+%SYS-5-CONFIG_I

@@ -83,6 +83,7 @@ def getConfigManagment():
         with open(filenameDevicesConfig, 'r') as json_data:
             data = json.load(json_data)
         confmanagment.getConfigFiles(data)
+        threading.Thread(target=faultmanagment.syslog_receiver).start() #Cambiar hilo de modo que solo escuche los SYSLOGCONFIG
         return data
     return render_template('index.html')
 

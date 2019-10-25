@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <title>Ping Puller</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="static/css/main.css" />
+	<noscript><link rel="stylesheet" href="static/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+    <div id="wrapper">
+        <header id="header">
+            <h1>Ping Puller</h1>
+            <p>Conectarse remotamente via Telnet</p>
+        </header>
+        <div id="main">
+            <section id="content" class="main">
+            <div style="text-align: center">
+                Remote host: <input type="text" name="host" id="remote-host"><br>
+                Telnet password: <input type="password" name="telnet_password" id="telnet-passw"><br>
+                Enable login: <input type="password" name="enable_password" id="enable-passw"><br><br>
+                <input type="submit" class="button primary" value="Iniciar Ping Puller" id="connect-telnet">
+                <p style="color:red" id="errorMssg"></p>
+            </div>
+            </section>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+    
+    var btn = document.getElementById("connect-telnet");
+
+    btn.addEventListener("click", function() {
+        var ourRequest = new XMLHttpRequest();
+        ourRequest.open('POST', 'http://localhost:8080/ping-puller');
+        ourRequest.onload = function() {
+            if (ourRequest.status >= 200 && ourRequest.status < 400) {
+                var data = JSON.parse(ourRequest.responseText);
+                renderPingPuller(data);
+            } else if (ourRequest.status == 401) {
+                document.getElementById("errorMssg").innerHTML = "Telnet: verificación de acceso de usuario incorrecta.";
+            } else if (ourRequest.status == 502) {
+                document.getElementById("errorMssg").innerHTML = "Error con la conexión Telnet.";
+            }
+        };
+
+        var remoteHost = document.getElementById("remote-host").value;
+        var telnetPassw = document.getElementById("telnet-passw").value;
+        var enablePassw = document.getElementById("enable-passw").value;
+        var data = new FormData();
+        data.append('host', remoteHost);
+        data.append('telnet_password', telnetPassw);
+        data.append('enable_password', enablePassw);
+
+        ourRequest.send(data);
+    });
+    
+    function renderPingPuller(data) {
+        var tab = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+        var i, j, output = "<section class='main' id='subredes-content'><div><h1 align='center'>Subredes:</h1>";
+        for (i in data.subred){
+            output += "Subred: " + data.subred[i].id;
+            output += " (Mascara: " + data.subred[i].mascara;
+            output += ", Broadcast: " + data.subred[i].broadcast + ")<br>";
+            for(j in data.subred[i].host){
+                output += tab + data.subred[i].host[j] + "<br>";
+            }
+            output += "<br>";
+        }
+        output += "<br><a href='http://localhost:8080/config-managment'>Configuration Managment</a></div></section>";
+        document.getElementById('content').insertAdjacentHTML("afterend", output);
+        console.log("Todo correcto")
+    }
+
+    </script>
+
+    <!-- Scripts -->
+    <script src="static/js/jquery.min.js"></script>
+		<script src="static/js/jquery.scrollex.min.js"></script>
+		<script src="static/js/jquery.scrolly.min.js"></script>
+		<script src="static/js/browser.min.js"></script>
+		<script src="static/js/breakpoints.min.js"></script>
+		<script src="static/js/util.js"></script>
+		<script src="static/js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <title>Fault Managment</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="static/css/main.css" />
+	<noscript><link rel="stylesheet" href="static/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+    <div id="wrapper">
+        <header id="header">
+            <h1>Fault Managment</h1>
+            <p>Monitor de SNMP traps y Syslog events</p>
+        </header>
+        <div id="main">
+            <section id="contentTraps" class="main">
+            <div id="traps" style="text-align: center">
+                <h1 align='center'>Traps:</h1>
+            </div>
+            </section>
+            <section id="contentSyslog" class="main">
+            <div id="syslog" style="text-align: center">
+                <h1 align='center'>Syslog:</h1>
+            </div>
+            </section>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+    var seconds = 1; // el tiempo en que se refresca
+
+    function refreshTraps(){
+        var ourRequest = new XMLHttpRequest();
+        ourRequest.open('POST', 'http://localhost:8080/fault-managment');
+        ourRequest.onload = function() {
+            if (ourRequest.status == 200) {
+                var data = JSON.parse(ourRequest.responseText);
+                renderTraps(data);
+            } else if (ourRequest.status == 204) {
+                console.log("Sin traps");
+            }
+            setTimeout('refreshSyslog()',seconds*1000);
+        };
+        var data = new FormData();
+        data.append('element', 'traps');
+        ourRequest.send(data);
+    }
+
+
+    function refreshSyslog(){
+        var ourRequest = new XMLHttpRequest();
+        ourRequest.open('POST', 'http://localhost:8080/fault-managment');
+        ourRequest.onload = function() {
+            if (ourRequest.status == 200) {
+                var data = JSON.parse(ourRequest.responseText);
+                renderSyslog(data);
+            } else if (ourRequest.status == 204) {
+                console.log("Sin syslog");
+            }
+            setTimeout('refreshTraps()',seconds*1000);
+        };
+        var data = new FormData();
+        data.append('element', 'syslog');
+        ourRequest.send(data);
+    }
+
+    function renderTraps(data) {
+        var i, output = "";
+        var tab = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+        for (i in data.traps){
+            output += "> " + data.traps[i].time + " <br>";
+            output += tab + "#" + data.traps[i].mssg + " <br>";
+        }
+        document.getElementById('traps').insertAdjacentHTML("afterend", output);
+    }
+
+    function renderSyslog(data) {
+        var i, output = "";
+        var tab = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+        for (i in data.notification){
+            output += "> Host[" + data.notification[i].address + "]: <br>";
+            output += tab + "#" + data.notification[i].mssg + " <br>";
+        }
+        document.getElementById('syslog').insertAdjacentHTML("afterend", output);
+    }
+
+
+    // Empieza la función de refrescar
+    window.onload = function(){
+        refreshTraps(); // corremos inmediatamente la funcion
+    }
+    </script>
+
+    <!-- Scripts -->
+    <script src="static/js/jquery.min.js"></script>
+		<script src="static/js/jquery.scrollex.min.js"></script>
+		<script src="static/js/jquery.scrolly.min.js"></script>
+		<script src="static/js/browser.min.js"></script>
+		<script src="static/js/breakpoints.min.js"></script>
+		<script src="static/js/util.js"></script>
+		<script src="static/js/main.js"></script>
+  </body>
+</html>

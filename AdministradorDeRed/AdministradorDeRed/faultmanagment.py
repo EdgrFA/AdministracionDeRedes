@@ -1,11 +1,13 @@
+from confmanagment import sysconfigAlert
 from os import remove
+import datetime
 import socket
 import json
-import datetime
 
 
 filenameTraps = 'AdministradorDeRed/utils/traps.json'
 filenameSyslog = 'AdministradorDeRed/utils/logging.json'
+
 
 def fooTraps(newmssg):
     currentDT = datetime.datetime.now()
@@ -76,15 +78,24 @@ def syslog_receiver():
 
     # Create a UDP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    # Bind the socket to the port
     server_address = ('', 8082)
-    print('starting trap service up on {} port {}'.format(*server_address))
-    sock.bind(server_address)
+    # Bind the socket to the port
+    try:
+        sock.bind(server_address)
+    except:
+        return
+    print('Syslog service up on {} port {}'.format(*server_address))
+
     while True:
         mssg, address = sock.recvfrom(4096)
         print('Trap-service:received {} bytes from {}'.format(len(mssg), address))
-        print(mssg.decode('utf-8'))
-        fooSyslog(mssg.decode('utf-8'), address)
+        decodedMssg = mssg.decode('utf-8')
+        print(decodedMssg)
+        #Guardar en archivo json
+        fooSyslog(decodedMssg, address)
+        #Filtrar alertas
+        if decodedMssg.find('%SYS-5-CONFIG') != -1:
+            sysconfigAlert(address[0])
 
 
 def getJsonTraps():

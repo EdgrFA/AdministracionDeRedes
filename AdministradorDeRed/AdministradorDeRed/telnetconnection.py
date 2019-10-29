@@ -37,7 +37,7 @@ def conectar_telnet(ip, passwordTelnet, passwordEnable = None):
 
 	except EOFError as eoferror:
 		#Conexion terminada
-		return None, 'Interrupcion: ' + eoferror
+		return None, 'Interrupcion: ' + str(eoferror)
 
 	return tn, mssg
 
@@ -87,6 +87,30 @@ def obtener_archivo_configuracion(tn, tftpServerHost, fileName):
 	tn.read_until(b'Destination filename ', 5)
 	tn.write(fn + b'\n')
 
-	tn.read_until(b'#', 15)
+	tn.read_until(b'#', 30)
 	print('Se obtuvo archivo: ' + fileName)
+	return True
+
+def restablecer_router_tftp(tn, tftpServerHost, filePath):
+	lh = tftpServerHost.encode('utf-8')
+	fp = filePath.encode('utf-8')
+
+	tn.write(b'copy tftp: running-config\n')
+
+	tn.read_until(b'Address or name of remote host []? ', 5)
+	tn.write(lh + b'\n')
+
+	tn.read_until(b'Source filename []? ', 5)
+	tn.write(fp + b'\n')
+
+	tn.read_until(b'Destination filename ', 5)
+	tn.write(b'running-config\n')
+
+	tn.read_until(b'#', 30)
+	tn.write(b'reload\n')
+	tn.read_until(b'[confirm]', 5)
+	tn.write(b'\n')
+	
+	print('Se restablecio archivo: ' + filePath)
+	
 	return True

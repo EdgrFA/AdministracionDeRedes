@@ -39,7 +39,7 @@
             if (ourRequest.status == 200) {
                 var data = JSON.parse(ourRequest.responseText);
                 renderTraps(data);
-            } else if (ourRequest.status == 204) {
+            } else if (ourRequest.status == 404) {
                 console.log("Sin traps");
             }
             setTimeout('refreshSyslog()',seconds*1000);
@@ -57,7 +57,7 @@
             if (ourRequest.status == 200) {
                 var data = JSON.parse(ourRequest.responseText);
                 renderSyslog(data);
-            } else if (ourRequest.status == 204) {
+            } else if (ourRequest.status == 404) {
                 console.log("Sin syslog");
             }
             setTimeout('refreshTraps()',seconds*1000);

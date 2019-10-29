@@ -1,7 +1,7 @@
+from confmanagment import getConfigFiles, getTelnetDevices, revisarCambios, descartarCambios, sobrescribirCambios
+from telnetconnection import conectar_telnet, obtener_subredes_telnet
 from flask import Flask, render_template, request, flash, abort
 import faultmanagment
-import confmanagment
-import telnetconnection
 import pingpuller
 import threading
 import json
@@ -29,14 +29,14 @@ def getPingPuller():
         telnet_host = request.form['host']
         passsword = request.form['telnet_password']
         enable_password = request.form['enable_password']
-        tn, mssg = telnetconnection.conectar_telnet(telnet_host, passsword, enable_password)
+        tn, mssg = conectar_telnet(telnet_host, passsword, enable_password)
         if tn == None:
             if mssg.find("Interrupcion") != -1:
                 abort(502)
             else:
                 abort(401)
 
-        subnets = telnetconnection.obtener_subredes_telnet(tn)
+        subnets = obtener_subredes_telnet(tn)
         tn.close()
 
         data = pingpuller.getJsonPingPuller(subnets)
@@ -59,11 +59,11 @@ def getFaultManagment():
         if elementoRequerido == 'traps':
             data = faultmanagment.getJsonTraps()
             if data == None:
-                abort(401)
+                abort(404)
         else:
             data = faultmanagment.getJsonSyslog()
             if data == None:
-                abort(401)
+                abort(404)
         return data
     return render_template('index.html')
 
@@ -82,7 +82,7 @@ def getConfigManagment():
         data = None
         with open(filenameDevicesConfig, 'r') as json_data:
             data = json.load(json_data)
-        confmanagment.getConfigFiles(data)
+        getConfigFiles(data)
         threading.Thread(target=faultmanagment.syslog_receiver).start() #Cambiar hilo de modo que solo escuche los SYSLOGCONFIG
         return data
     return render_template('index.html')
@@ -103,7 +103,7 @@ def connectDevices():
             data = None
             with open(filenameTopology, 'r') as json_data:
                 data = json.load(json_data)
-            devices = confmanagment.getTelnetDevices(data, passsword, enable_password)
+            devices = getTelnetDevices(data, passsword, enable_password)
             file = open(filenameDevicesConfig, 'w') 
             file.write(json.dumps(devices))
             return render_template('config-managment.html')
@@ -112,6 +112,31 @@ def connectDevices():
         #Revisar si sigue existiendo topology.json
     return render_template('index.html')
 
+    
+@app.route('/file-monitor', methods=['GET', 'PUT', 'DELETE'])
+def fileMonitor():
+    if request.method == 'GET':
+        data = revisarCambios()
+        data = json.dumps(data)
+        return data
+        #Enviar mensaje al servidor si se desean reemplazar los cambios
+        #Talvez enviar la hora de creacion del nuevo archivo de configuracion
+    if request.method == 'PUT':
+        configFileName = request.form['file']
+        success, mssg = sobrescribirCambios(configFileName)
+        print('res: ' + mssg)
+        if not success:
+            abort(404)
+        return 'OK'
+    if request.method == 'DELETE':
+        configFileName = request.form['file']
+        success, mssg = descartarCambios(configFileName)
+        print('res: ' + mssg)
+        if not success:
+            abort(404)
+        return 'OK'
+    return
+
+
 if __name__ == '__main__':
     app.run(host="127.0.0.1", port=int("8080"), debug=True)
-    

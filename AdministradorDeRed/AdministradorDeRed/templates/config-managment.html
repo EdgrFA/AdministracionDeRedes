@@ -15,14 +15,63 @@
             <p>Administrador de archivos de configuración</p>
         </header>
         <div id="main">
+            <section id="contentConfigFiles" class="main">
+                <div id="configFiles" style="text-align: center">
+                    <h1 align='center'>Monitoreo de Routers:</h1>
+                </div>
+            </section>
             <section id="contentDevices" class="main">
-            <div id="devices" style="text-align: center">
-                <h1 align='center'>Dispositivos Administrados:</h1>
-            </div>
+                <div id="devices" style="text-align: center">
+                    <h1 align='center'>Dispositivos Administrados:</h1>
+                </div>
+            </section>
         </div>
     </div>
 
     <script type="text/javascript">
+
+    var seconds = 2; // el tiempo en que se refresca
+    var actualizando = false;
+
+    function descartarCambios(btn){
+        var div = btn.parentNode;
+        actualizando = true;
+
+        var ourRequest = new XMLHttpRequest();
+        ourRequest.open('DELETE', 'http://localhost:8080/file-monitor');
+        ourRequest.onload = function () {
+            if (ourRequest.status >= 200 && ourRequest.status < 400) {
+                alert("Se descartaron los cambios");
+            } else if (ourRequest.status == 404){
+                alert("error con la conexion");
+            }
+            div.remove();
+            actualizando = false;
+        }
+        var data = new FormData();
+        data.append('file', div.id);
+        ourRequest.send(data);
+    }
+
+    function sobrescribirCambios(btn){
+        var div = btn.parentNode;
+        actualizando = true;
+
+        var ourRequest = new XMLHttpRequest();
+        ourRequest.open('PUT', 'http://localhost:8080/file-monitor');
+        ourRequest.onload = function () {
+            if (ourRequest.status >= 200 && ourRequest.status < 400) {
+                alert("Se sobrescribieron los cambios");
+            } else if (ourRequest.status == 404){
+                alert("error con la conexion");
+            }
+            div.remove();
+            actualizando = false;
+        }
+        var data = new FormData();
+        data.append('file', div.id);
+        ourRequest.send(data);
+    }
 
     function getDevicesConfigFile() {
         var ourRequest = new XMLHttpRequest();
@@ -30,7 +79,9 @@
         ourRequest.onload = function() {
             if (ourRequest.status == 200) {
                 var data = JSON.parse(ourRequest.responseText);
-                renderDevices(data);
+                if(!actualizando)
+                    renderDevices(data);
+                setTimeout('refreshConfigMonitor()',seconds*1000);
             } else if (ourRequest.status == 404) {
                 
             }
@@ -38,8 +89,36 @@
         ourRequest.send();
     }
 
+    function refreshConfigMonitor(){
+        var ourRequest = new XMLHttpRequest();
+        ourRequest.open('GET', 'http://localhost:8080/file-monitor');
+        ourRequest.onload = function() {
+            if (ourRequest.status == 200) {
+                var data = JSON.parse(ourRequest.responseText);
+                renderMonitor(data);
+            } else if (ourRequest.status == 404) {
+                console.log("Sin cambios");
+            }
+            setTimeout('refreshConfigMonitor()',seconds*1000);
+        };
+        ourRequest.send(null);
+    }
+
+    function renderMonitor(data){
+        var i, output = "";
+        for (i in data.dispositivo){
+            if (document.getElementById(data.dispositivo[i].file) != null)
+                continue;
+            output += "<div id=" + data.dispositivo[i].file + "><hr/>";
+            output += data.dispositivo[i].fecha + ": Cambios en el Router: " + data.dispositivo[i].router + "<br>";
+            output += "<input type='button' value='Descartar' onclick='descartarCambios(this)'/>";
+            output += "<input type='button' value='Sobrescribir' onclick='sobrescribirCambios(this)'/>";
+            output += "</div>";
+        }
+        document.getElementById('configFiles').insertAdjacentHTML("beforeend", output);
+    }
+
     function renderDevices(data){
-        var tab = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
         var i, j, output = "";
         for (i in data.dispositivo){
             output += "> " + data.dispositivo[i].name;

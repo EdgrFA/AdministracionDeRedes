@@ -2779,7 +2779,7 @@
                 "properties": {
                     "interfaces": [
                         {
-                            "name": "enp3s0",
+                            "name": "enp25s0",
                             "special": false,
                             "type": "ethernet"
                         },
@@ -2796,11 +2796,6 @@
                         {
                             "name": "virbr0-nic",
                             "special": true,
-                            "type": "ethernet"
-                        },
-                        {
-                            "name": "wlp2s0",
-                            "special": false,
                             "type": "ethernet"
                         }
                     ],

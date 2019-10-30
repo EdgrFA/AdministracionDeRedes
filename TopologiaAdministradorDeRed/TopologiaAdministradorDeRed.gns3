@@ -1538,7 +1538,7 @@
                 },
                 "symbol": ":/symbols/router.svg",
                 "width": 66,
-                "x": -690,
+                "x": -688,
                 "y": -83,
                 "z": 0
             },
@@ -2755,7 +2755,7 @@
                 "symbol": ":/symbols/router.svg",
                 "width": 66,
                 "x": 833,
-                "y": 113,
+                "y": 114,
                 "z": 0
             },
             {
@@ -2779,7 +2779,7 @@
                 "properties": {
                     "interfaces": [
                         {
-                            "name": "enp25s0",
+                            "name": "enp3s0",
                             "special": false,
                             "type": "ethernet"
                         },
@@ -2796,6 +2796,11 @@
                         {
                             "name": "virbr0-nic",
                             "special": true,
+                            "type": "ethernet"
+                        },
+                        {
+                            "name": "wlp2s0",
+                            "special": false,
                             "type": "ethernet"
                         }
                     ],

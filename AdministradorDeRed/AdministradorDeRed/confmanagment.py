@@ -1,8 +1,10 @@
 from multiprocessing.pool import ThreadPool
+from time import sleep
 import telnetconnection
 import subprocess 
 import threading
 import shutil 
+
 import json
 import os
 
@@ -73,7 +75,7 @@ def getTelnetDevices(topology, password, enable_password):
     return devices
 
 
-def getConfigFile(device, filename =None):
+def getConfigFile(device, filename =None, typeFile = 'startup'):
     if filename == None:
         filename = device['configfile']
     if not os.path.isdir(tftpServerPath + device['name']):
@@ -83,7 +85,10 @@ def getConfigFile(device, filename =None):
         tn, mssg = telnetconnection.conectar_telnet(ip, device['password'], device['enable'])
         if tn == None:
             continue
-        success = telnetconnection.obtener_archivo_configuracion(tn, tftpHost, filename)
+        if typeFile == 'startup':
+            success = telnetconnection.obtener_startup_config(tn, tftpHost, filename)
+        else:
+            success = telnetconnection.obtener_running_config(tn, tftpHost, filename)
         tn.close()
 
         if success:
@@ -93,7 +98,8 @@ def getConfigFile(device, filename =None):
                         os.path.join(tftpServerPath + device['name'], filename))
                     break
                 except Exception as e:
-                    print(e)
+                    print(device['name'] + ': ' + str(e))
+                    sleep(1)
                     continue
             return True
     print('Telnet(' + device['name'] + '): No se pudo obtener archivo de configuracion.')
@@ -146,7 +152,7 @@ def sysconfigAlert(address):
         for ip in device['localip']:
             if ip == address:
                 print('Alerta en router: ' + device['name'] + '(' + ip + ')')
-                t = threading.Thread(target = getConfigFile, args = (device, 'SYSCONFIG' + device['configfile']))
+                t = threading.Thread(target = getConfigFile, args = (device, 'SYSCONFIG' + device['configfile'], 'running'))
                 t.start()
     return
 
@@ -193,7 +199,14 @@ def sobrescribirCambios(configFileName):
             pathFile =  tftpServerPath + device['name'] + "/" 
             shutil.move(os.path.join(pathFile, 'SYSCONFIG' + configFileName), 
                 os.path.join(pathFile, configFileName))
-            return True, 'Se remplazo archivo de configuracion: ' + configFileName
+            for ip in device['localip']:
+                tn, mssg = telnetconnection.conectar_telnet(ip, device['password'], device['enable'])
+                if tn == None:
+                    continue
+                success = telnetconnection.sobrescribir_cambios(tn)
+                tn.close()
+                return True, 'Se remplazo archivo de configuracion: ' + configFileName
+            return True, 'No se pudo sobrescribir el router'
     return False, 'No se pudo encontrar el archivo'
 
 

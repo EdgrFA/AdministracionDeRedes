@@ -75,13 +75,30 @@ def obtener_nombre_host(tn):
 	return hostname[0:len(hostname)-1]
 
 
-def obtener_archivo_configuracion(tn, tftpServerHost, fileName):
+def obtener_startup_config(tn, tftpServerHost, fileName):
+	lh = tftpServerHost.encode('utf-8')
+	fn = fileName.encode('utf-8')
+
+	tn.write(b'copy startup-config tftp:\n')
+	
+	tn.read_until(b'Address or name of remote host', 5)
+	tn.write(lh + b'\n')
+	
+	tn.read_until(b'Destination filename ', 5)
+	tn.write(fn + b'\n')
+
+	tn.read_until(b'#', 30)
+	print('Se obtuvo archivo: ' + fileName)
+	return True
+
+
+def obtener_running_config(tn, tftpServerHost, fileName):
 	lh = tftpServerHost.encode('utf-8')
 	fn = fileName.encode('utf-8')
 
 	tn.write(b'copy running-config tftp:\n')
 	
-	tn.read_until(b'Address or name of remote host []? ', 5)
+	tn.read_until(b'Address or name of remote host', 5)
 	tn.write(lh + b'\n')
 	
 	tn.read_until(b'Destination filename ', 5)
@@ -95,22 +112,36 @@ def restablecer_router_tftp(tn, tftpServerHost, filePath):
 	lh = tftpServerHost.encode('utf-8')
 	fp = filePath.encode('utf-8')
 
-	tn.write(b'copy tftp: running-config\n')
+	print('Telnet: Obteniendo archivo: ' + filePath)
+	tn.write(b'copy tftp: startup-config\n')
 
 	tn.read_until(b'Address or name of remote host []? ', 5)
 	tn.write(lh + b'\n')
 
-	tn.read_until(b'Source filename []? ', 5)
+	tn.read_until(b'Source filename', 5)
 	tn.write(fp + b'\n')
 
 	tn.read_until(b'Destination filename ', 5)
-	tn.write(b'running-config\n')
+	tn.write(b'startup-config\n')
 
-	tn.read_until(b'#', 30)
+	tn.read_until(b'#', 60)
 	tn.write(b'reload\n')
 	tn.read_until(b'[confirm]', 5)
 	tn.write(b'\n')
 	
-	print('Se restablecio archivo: ' + filePath)
+	print('Telnet: Se restablecio archivo: ' + filePath)
 	
+	return True
+
+def sobrescribir_cambios(tn):
+	print('Telnet: Escribiendo cambios')
+	tn.write(b'write\n')
+
+	tn.read_until(b'[confirm]', 5)
+	tn.write(b'\n')
+	
+	tn.read_until(b'[OK]', 60)
+	tn.write(b'\n')
+
+	print('Telnet: Se escribieron cambios')
 	return True

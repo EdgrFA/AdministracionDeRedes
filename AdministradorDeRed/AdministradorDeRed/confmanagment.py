@@ -128,7 +128,7 @@ def compareConfigFiles(pathFile, configFileName):
             stdout = subprocess.PIPE)
     output = str(data.communicate()[0].decode('utf8'))
     data = output.split('\n')
-    fecha = None
+    fecha = ''
     equals = True
     for line in data:
         if line.find('Last configuration change at') != -1:

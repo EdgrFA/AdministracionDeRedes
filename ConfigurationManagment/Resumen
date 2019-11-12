@@ -1,0 +1,55 @@
+(Poner la topologia y avisar que se necesita tener configurado Telnet, TFTP y Alertas SYSLOG en los routers)
+(un poco de informacion de alertas logging que pusimos en el anterior reporte)
+(Alguna explicacion de la tabla configuration managment)
+
+Antes de comenzar el monitoreo de routers, utilizando el ping puller de la tabla 1, se obtiene la topologia y se identifican los routers de la red donde finalmente se guardaran estos dispositivos en un archivo Json que contendra el hostname del router, las direcciones IP de sus interfaces y otra informacion.
+
+(Imagen DispositivosJson)
+
+Al tener toda la informacion de los routers dentro de la red, se obtienen los archivos de configuracion inicial y configuracion actual utilizando TFTP y Telnet, ordenandolos de la siguiente manera en el servidor TFTP
+
+(Imagen ServidorTFTPCarpetas)
+
+Esta informacion se podra visualizar en la pagina de administracion de configuracion
+
+(Imagen COnfigurationManagmentPagina solo poner la parte de dispositivos administrados)
+
+Para obtener los archivos de configuracion inicial y actual se utilizaron las siguientes funciones:
+
+(Imagen ObtenerStartupConfig)
+(Imagen RunningCongifTelnet)
+
+Dentro de las carpetas de cada router se guardaran dos archivos con el mismo nombre, el primero estara oculto ".configFileRX" y contendra la configuracion inicial del router, mientras el segundo contendra la configuracion actual del router.
+
+(Imagen ArchivoOculto)
+
+Para el monitoreo de los routers se utilizaron alertas syslog, ya que al configurar algun router, este enviara una alerta tipo %SYS-5-CONFIG al servidor y asi el servidor sabra que se realizaron cambios. Al recibir una alerta, se pedira el archivo de configuracion actual de ese router mediante una conexion Telnet y se sobrescribira en el archivo visible de su carpeta del servidor TFTP.
+
+Las funciones para recibir alertas y obtener el archivo de configuracion mediante Telnet es el siguiente:
+
+(Imagen AlertaCambiosEnElRouter)
+(Imagen SysCOnfigAlert)
+(Imagen getConfigFile)
+
+El servidor realizara constantemente una revision de los archivos de configuracion utilizando el comando de sistema "diff" comparando los dos archivos dentro de las carpetas de cada router.
+
+Ejemplo:
+
+(Imagen ComandoDiff.png)
+
+Esto permite que se pueda configurar un router desde los archivos de configuracion sin necesidad de acceder a el en la red
+
+Codigo de la funcion para comparar archivos:
+
+(Imagen FuncionCompararArchivos)
+
+Si se llega a encontrar alguna diferencia en los archivos de configuracion, se mandara el aviso a la pagina de administracion de configuracion donde se podra escojer si se desean conservar los nuevos cambios o descartarlos.
+
+(IMagen MOnitoreoDeRouters)
+
+Si se desean conservar los cambios, se realizara una conexion con Telnet y TFTP para cargar el archivo de configuracion actual guardado en el servidor dentro del archivo de configuracion inicial del router.
+
+Si se descartan los cambios, se cargara el archivo usando nuevamente Telnet y TFTP en el router y se reiniciara a su configruacion inicial.
+
+(Imagen DescartandoCambiosRouter18)
+(IMagen RestableciendoArchivoConfiguracionR18)

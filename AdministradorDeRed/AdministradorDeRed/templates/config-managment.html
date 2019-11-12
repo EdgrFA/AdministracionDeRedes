@@ -105,12 +105,16 @@
     }
 
     function renderMonitor(data){
-        var i, output = "";
+        var i, j, output = "";
         for (i in data.dispositivo){
             if (document.getElementById(data.dispositivo[i].file) != null)
                 continue;
             output += "<div id=" + data.dispositivo[i].file + "><hr/>";
-            output += data.dispositivo[i].fecha + ": Cambios en el Router: " + data.dispositivo[i].router + "<br>";
+            output += "Cambios en el Router: " + data.dispositivo[i].router + "<br>";
+            output += data.dispositivo[i].fecha + "<br>";
+            for(j in data.dispositivo[i].cambios){
+                output += data.dispositivo[i].cambios[j] + "<br>";
+            }
             output += "<input type='button' value='Descartar' onclick='descartarCambios(this)'/>";
             output += "<input type='button' value='Sobrescribir' onclick='sobrescribirCambios(this)'/>";
             output += "</div>";

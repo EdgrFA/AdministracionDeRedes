@@ -1,0 +1,11 @@
+1 Configurar Netflow en todos los dispositivos de red
+2 Configurar diferentes usuarios
+3 Obtener estadisticas del uso de HTTP para ada usuario
+4 Mostrar las estadistias en la interfaz
+
+
+Solo estadisticas Http sobre la mmaquina virtual
+Considerar estadisticas de los routers
+(Numero de paquetes que no hayan sido routers o ancho de banda)
+
+Informacion de un router y del consumo de servicio http de mis usuarios.

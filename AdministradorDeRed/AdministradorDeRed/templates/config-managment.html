@@ -38,7 +38,7 @@
         actualizando = true;
 
         var ourRequest = new XMLHttpRequest();
-        ourRequest.open('DELETE', 'http://localhost:8080/file-monitor');
+        ourRequest.open('DELETE', 'http://192.168.0.2:8080/file-monitor');
         ourRequest.onload = function () {
             if (ourRequest.status >= 200 && ourRequest.status < 400) {
                 alert("Se descartaron los cambios");
@@ -58,7 +58,7 @@
         actualizando = true;
 
         var ourRequest = new XMLHttpRequest();
-        ourRequest.open('PUT', 'http://localhost:8080/file-monitor');
+        ourRequest.open('PUT', 'http://192.168.0.2:8080/file-monitor');
         ourRequest.onload = function () {
             if (ourRequest.status >= 200 && ourRequest.status < 400) {
                 alert("Se sobrescribieron los cambios");
@@ -75,7 +75,7 @@
 
     function getDevicesConfigFile() {
         var ourRequest = new XMLHttpRequest();
-        ourRequest.open('POST', 'http://localhost:8080/config-managment');
+        ourRequest.open('POST', 'http://192.168.0.2:8080/config-managment');
         ourRequest.onload = function() {
             if (ourRequest.status == 200) {
                 var data = JSON.parse(ourRequest.responseText);
@@ -91,7 +91,7 @@
 
     function refreshConfigMonitor(){
         var ourRequest = new XMLHttpRequest();
-        ourRequest.open('GET', 'http://localhost:8080/file-monitor');
+        ourRequest.open('GET', 'http://192.168.0.2:8080/file-monitor');
         ourRequest.onload = function() {
             if (ourRequest.status == 200) {
                 var data = JSON.parse(ourRequest.responseText);

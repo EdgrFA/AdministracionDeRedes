@@ -531,9 +531,9 @@
             {
                 "drawing_id": "ba0d2fb3-2927-47a2-81f4-4b15553e538b",
                 "rotation": 0,
-                "svg": "<svg height=\"25\" width=\"136\"><text fill=\"#000000\" fill-opacity=\"1.0\" font-family=\"TypeWriter\" font-size=\"10.0\" font-weight=\"bold\">Fault Managment</text></svg>",
-                "x": -52,
-                "y": -360,
+                "svg": "<svg height=\"25\" width=\"181\"><text fill=\"#000000\" fill-opacity=\"1.0\" font-family=\"TypeWriter\" font-size=\"10.0\" font-weight=\"bold\">Accounting Managment</text></svg>",
+                "x": -73,
+                "y": -357,
                 "z": 1
             },
             {
@@ -542,6 +542,22 @@
                 "svg": "<svg height=\"25\" width=\"44\"><text fill=\"#000000\" fill-opacity=\"1.0\" font-family=\"TypeWriter\" font-size=\"10.0\" font-weight=\"bold\">.27.1</text></svg>",
                 "x": 412,
                 "y": 155,
+                "z": 1
+            },
+            {
+                "drawing_id": "b333050c-c660-47d7-8654-16b9bcfa829c",
+                "rotation": 0,
+                "svg": "<svg height=\"25\" width=\"44\"><text fill=\"#000000\" fill-opacity=\"1.0\" font-family=\"TypeWriter\" font-size=\"10.0\" font-weight=\"bold\">.28.1</text></svg>",
+                "x": -656,
+                "y": -114,
+                "z": 1
+            },
+            {
+                "drawing_id": "821d3306-7290-4df9-a4e9-71eac27d7f62",
+                "rotation": 0,
+                "svg": "<svg height=\"25\" width=\"44\"><text fill=\"#000000\" fill-opacity=\"1.0\" font-family=\"TypeWriter\" font-size=\"10.0\" font-weight=\"bold\">.28.2</text></svg>",
+                "x": -657,
+                "y": -198,
                 "z": 1
             }
         ],
@@ -1475,6 +1491,68 @@
                     }
                 ],
                 "suspend": false
+            },
+            {
+                "filters": {},
+                "link_id": "7d7786ec-da04-42b3-a7c0-c0925d84fb9d",
+                "nodes": [
+                    {
+                        "adapter_number": 0,
+                        "label": {
+                            "rotation": 0,
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "UDPTunnel",
+                            "x": 80,
+                            "y": 74
+                        },
+                        "node_id": "11fcaf32-8e97-4300-8fca-1c62945c5a9f",
+                        "port_number": 2
+                    },
+                    {
+                        "adapter_number": 3,
+                        "label": {
+                            "rotation": 0,
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "f3/0",
+                            "x": 32,
+                            "y": -17
+                        },
+                        "node_id": "feedbe1f-4007-4bd8-806d-008e289a6ed5",
+                        "port_number": 0
+                    }
+                ],
+                "suspend": false
+            },
+            {
+                "filters": {},
+                "link_id": "76749bb4-b0f6-46a6-ba25-3dcc0cede3d9",
+                "nodes": [
+                    {
+                        "adapter_number": 0,
+                        "label": {
+                            "rotation": 0,
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "e3",
+                            "x": 62,
+                            "y": 45
+                        },
+                        "node_id": "8b04ac9b-5e8b-4507-8069-868cca325429",
+                        "port_number": 3
+                    },
+                    {
+                        "adapter_number": 0,
+                        "label": {
+                            "rotation": 0,
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "UDPTunnel27",
+                            "x": 45,
+                            "y": -1
+                        },
+                        "node_id": "3fffd42e-d7da-49f1-aca7-75f080962f77",
+                        "port_number": 2
+                    }
+                ],
+                "suspend": false
             }
         ],
         "nodes": [
@@ -1538,8 +1616,8 @@
                 },
                 "symbol": ":/symbols/router.svg",
                 "width": 66,
-                "x": -688,
-                "y": -83,
+                "x": -690,
+                "y": -85,
                 "z": 0
             },
             {
@@ -2767,11 +2845,11 @@
                 "label": {
                     "rotation": 0,
                     "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
-                    "text": "Cloud-1",
-                    "x": 47,
-                    "y": -25
+                    "text": "Server",
+                    "x": 57,
+                    "y": -23
                 },
-                "name": "Cloud-1",
+                "name": "Server",
                 "node_id": "8eaf5bf1-8930-4087-b507-d2bbc6300c99",
                 "node_type": "cloud",
                 "port_name_format": "Ethernet{0}",
@@ -2787,6 +2865,11 @@
                             "name": "lo",
                             "special": true,
                             "type": "ethernet"
+                        },
+                        {
+                            "name": "tap1",
+                            "special": false,
+                            "type": "tap"
                         },
                         {
                             "name": "virbr0",
@@ -2810,8 +2893,8 @@
                 },
                 "symbol": ":/symbols/cloud.svg",
                 "width": 159,
-                "x": -1017,
-                "y": -97,
+                "x": -1015,
+                "y": -95,
                 "z": 0
             },
             {
@@ -2911,8 +2994,8 @@
                 "properties": {},
                 "symbol": ":/symbols/vpcs_guest.svg",
                 "width": 65,
-                "x": 331,
-                "y": 350,
+                "x": 255,
+                "y": 335,
                 "z": 0
             },
             {
@@ -2936,8 +3019,158 @@
                 "properties": {},
                 "symbol": ":/symbols/vpcs_guest.svg",
                 "width": 65,
-                "x": 420,
-                "y": 349,
+                "x": 373,
+                "y": 367,
+                "z": 0
+            },
+            {
+                "compute_id": "local",
+                "console": null,
+                "console_type": null,
+                "first_port_name": null,
+                "height": 71,
+                "label": {
+                    "rotation": 0,
+                    "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                    "text": "Client28",
+                    "x": 45,
+                    "y": -25
+                },
+                "name": "Client28",
+                "node_id": "11fcaf32-8e97-4300-8fca-1c62945c5a9f",
+                "node_type": "cloud",
+                "port_name_format": "Ethernet{0}",
+                "port_segment_size": 0,
+                "properties": {
+                    "interfaces": [
+                        {
+                            "name": "enp25s0",
+                            "special": false,
+                            "type": "ethernet"
+                        },
+                        {
+                            "name": "lo",
+                            "special": true,
+                            "type": "ethernet"
+                        },
+                        {
+                            "name": "tap1",
+                            "special": false,
+                            "type": "tap"
+                        },
+                        {
+                            "name": "virbr0",
+                            "special": true,
+                            "type": "ethernet"
+                        },
+                        {
+                            "name": "virbr0-nic",
+                            "special": true,
+                            "type": "ethernet"
+                        }
+                    ],
+                    "ports_mapping": [
+                        {
+                            "interface": "enp25s0",
+                            "name": "enp25s0",
+                            "port_number": 0,
+                            "type": "ethernet"
+                        },
+                        {
+                            "interface": "tap1",
+                            "name": "tap1",
+                            "port_number": 1,
+                            "type": "tap"
+                        },
+                        {
+                            "lport": 30000,
+                            "name": "UDPTunnel",
+                            "port_number": 2,
+                            "rhost": "192.168.100.2",
+                            "rport": 20000,
+                            "type": "udp"
+                        }
+                    ]
+                },
+                "symbol": ":/symbols/cloud.svg",
+                "width": 159,
+                "x": -738,
+                "y": -274,
+                "z": 0
+            },
+            {
+                "compute_id": "local",
+                "console": null,
+                "console_type": null,
+                "first_port_name": null,
+                "height": 71,
+                "label": {
+                    "rotation": 0,
+                    "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                    "text": "Client27",
+                    "x": 45,
+                    "y": -25
+                },
+                "name": "Client27",
+                "node_id": "3fffd42e-d7da-49f1-aca7-75f080962f77",
+                "node_type": "cloud",
+                "port_name_format": "Ethernet{0}",
+                "port_segment_size": 0,
+                "properties": {
+                    "interfaces": [
+                        {
+                            "name": "enp25s0",
+                            "special": false,
+                            "type": "ethernet"
+                        },
+                        {
+                            "name": "lo",
+                            "special": true,
+                            "type": "ethernet"
+                        },
+                        {
+                            "name": "tap1",
+                            "special": false,
+                            "type": "tap"
+                        },
+                        {
+                            "name": "virbr0",
+                            "special": true,
+                            "type": "ethernet"
+                        },
+                        {
+                            "name": "virbr0-nic",
+                            "special": true,
+                            "type": "ethernet"
+                        }
+                    ],
+                    "ports_mapping": [
+                        {
+                            "interface": "enp25s0",
+                            "name": "enp25s0",
+                            "port_number": 0,
+                            "type": "ethernet"
+                        },
+                        {
+                            "interface": "tap1",
+                            "name": "tap1",
+                            "port_number": 1,
+                            "type": "tap"
+                        },
+                        {
+                            "lport": 30001,
+                            "name": "UDPTunnel27",
+                            "port_number": 2,
+                            "rhost": "192.168.100.2",
+                            "rport": 20001,
+                            "type": "udp"
+                        }
+                    ]
+                },
+                "symbol": ":/symbols/cloud.svg",
+                "width": 159,
+                "x": 443,
+                "y": 326,
                 "z": 0
             }
         ]

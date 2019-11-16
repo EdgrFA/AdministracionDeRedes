@@ -32,10 +32,10 @@
 
     btn.addEventListener("click", function() {
         var ourRequest = new XMLHttpRequest();
-        ourRequest.open('POST', 'http://localhost:8080/connect-devices');
+        ourRequest.open('POST', 'http://192.168.0.2:8080/connect-devices');
         ourRequest.onload = function() {
             if (ourRequest.status >= 200 && ourRequest.status < 400) {
-                window.location.href = "http://localhost:8080/config-managment";
+                window.location.href = "http://192.168.0.2:8080/config-managment";
             } else if (ourRequest.status == 401) {
                 document.getElementById("errorMssg").innerHTML = "Telnet: verificación de acceso de usuario incorrecta.";
             } else if (ourRequest.status == 502) {

@@ -33,7 +33,7 @@
 
     btn.addEventListener("click", function() {
         var ourRequest = new XMLHttpRequest();
-        ourRequest.open('POST', 'http://localhost:8080/ping-puller');
+        ourRequest.open('POST', 'http://192.168.0.2:8080/ping-puller');
         ourRequest.onload = function() {
             if (ourRequest.status >= 200 && ourRequest.status < 400) {
                 var data = JSON.parse(ourRequest.responseText);
@@ -68,7 +68,7 @@
             }
             output += "<br>";
         }
-        output += "<br><a href='http://localhost:8080/config-managment'>Configuration Managment</a></div></section>";
+        output += "<br><a href='http://192.168.0.2:8080/config-managment'>Configuration Managment</a></div></section>";
         document.getElementById('content').insertAdjacentHTML("afterend", output);
         console.log("Todo correcto")
     }

@@ -34,7 +34,7 @@
 
     function refreshTraps(){
         var ourRequest = new XMLHttpRequest();
-        ourRequest.open('POST', 'http://localhost:8080/fault-managment');
+        ourRequest.open('POST', 'http://192.168.0.2:8080/fault-managment');
         ourRequest.onload = function() {
             if (ourRequest.status == 200) {
                 var data = JSON.parse(ourRequest.responseText);
@@ -52,7 +52,7 @@
 
     function refreshSyslog(){
         var ourRequest = new XMLHttpRequest();
-        ourRequest.open('POST', 'http://localhost:8080/fault-managment');
+        ourRequest.open('POST', 'http://192.168.0.2:8080/fault-managment');
         ourRequest.onload = function() {
             if (ourRequest.status == 200) {
                 var data = JSON.parse(ourRequest.responseText);

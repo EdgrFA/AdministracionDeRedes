@@ -155,11 +155,6 @@ def compareConfigFiles(pathFile, configFileName):
         else:
             leer = False
         lineAnterior = line
-    
-    #if equals:
-    #    shutil.move(os.path.join(pathFile, '.' + configFileName), 
-    #        os.path.join(pathFile, configFileName))
-    #    print('se remplazo archivo porque eran iguales')
     return equals, cambios, fecha
 
 

@@ -1,9 +1,0 @@
-Nov 20 05:09:46.223 HYPERVISOR: Release 0.2.21-amd64/Linux (tag 2019071212)
-Nov 20 05:09:46.223 HYPERVISOR: Started on IP = 127.0.0.1, TCP port = 34093.
-Nov 20 05:09:46.236 HYPERVISOR: exec_cmd: hypervisor version 
-Nov 20 05:09:46.236 HYPERVISOR: exec_cmd: hypervisor working_dir /home/edgrfa/Documentos/AdministracionDeRedes/ClientAdministradorDeRed/project-files/dynamips 
-Nov 20 05:09:46.236 GENERAL: working_dir=/home/edgrfa/Documentos/AdministracionDeRedes/ClientAdministradorDeRed/project-files/dynamips
-Nov 20 05:09:46.236 HYPERVISOR: exec_cmd: ethsw create ESC27 
-Nov 20 05:09:46.594 HYPERVISOR: exec_cmd: nio create_udp udp-2c1707c1-e493-436e-871e-8721fc9621f6 10000 127.0.0.1 10001 
-Nov 20 05:09:46.594 HYPERVISOR: exec_cmd: ethsw add_nio ESC27 udp-2c1707c1-e493-436e-871e-8721fc9621f6 
-Nov 20 05:09:46.607 HYPERVISOR: exec_cmd: ethsw set_access_port ESC27 udp-2c1707c1-e493-436e-871e-8721fc9621f6 1 

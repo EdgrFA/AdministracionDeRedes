@@ -29,3 +29,4 @@ sudo route add -net 192.168.24.0 gw 192.168.28.1 netmask 255.255.255.0 dev tap1
 sudo route add -net 192.168.25.0 gw 192.168.28.1 netmask 255.255.255.0 dev tap1
 sudo route add -net 192.168.26.0 gw 192.168.28.1 netmask 255.255.255.0 dev tap1
 sudo route add -net 192.168.27.0 gw 192.168.28.1 netmask 255.255.255.0 dev tap1
+sudo route add -net 192.168.28.0 gw 192.168.28.1 netmask 255.255.255.0 dev tap1

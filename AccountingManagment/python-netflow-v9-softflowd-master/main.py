@@ -171,7 +171,7 @@ if __name__ == "__main__":
     parser.add_argument("--port", "-p", type=int, default=2055,
                         help="collector listener port")
     parser.add_argument("--file", "-o", type=str, dest="output_file",
-                        default="flow.json",
+                        default="flows.gz",
                         help="collector export multiline JSON file")
     parser.add_argument("--debug", "-D", action="store_true",
                         help="Enable debug output")
@@ -198,14 +198,13 @@ if __name__ == "__main__":
         # This also means that the files have to be handled differently, because they are gzipped and not formatted as
         # one single big JSON dump, but rather many little JSON dumps, separated by line breaks.
         for ts, client, export in get_export_packets(args.host, args.port):
-            data = {}
-            data['registro'] = []
-            data['registro'].append({
-                "client": client,
+            data = {
+                "client": client[0],
                 "flows": [flow.data for flow in export.flows]
-            })
-            with open(args.output_file, "w+") as fh:  # open as append, not reading the whole file
-                json.dump(data, fh)
+            }
+            line = json.dumps(data).encode() + b"\n"  # byte encoded line
+            with gzip.open(args.output_file, "ab") as fh:  # open as append, not reading the whole file
+                fh.write(line)
     except KeyboardInterrupt:
         logger.info("Received KeyboardInterrupt, passing through")
         pass

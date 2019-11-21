@@ -1556,19 +1556,19 @@
             },
             {
                 "filters": {},
-                "link_id": "a917ad44-e724-4b3d-9d3e-d58ca3b2a5d4",
+                "link_id": "3eaa0af2-bad7-465e-b93e-b1bde7b39e47",
                 "nodes": [
                     {
                         "adapter_number": 0,
                         "label": {
                             "rotation": 0,
                             "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
-                            "text": "TunnelCLient28",
+                            "text": "UDP tunnel 1",
                             "x": 80,
                             "y": 74
                         },
                         "node_id": "11fcaf32-8e97-4300-8fca-1c62945c5a9f",
-                        "port_number": 2
+                        "port_number": 3
                     },
                     {
                         "adapter_number": 0,
@@ -2888,7 +2888,7 @@
                 "properties": {
                     "interfaces": [
                         {
-                            "name": "enp25s0",
+                            "name": "enp3s0",
                             "special": false,
                             "type": "ethernet"
                         },
@@ -2905,6 +2905,11 @@
                         {
                             "name": "virbr0-nic",
                             "special": true,
+                            "type": "ethernet"
+                        },
+                        {
+                            "name": "wlp2s0",
+                            "special": false,
                             "type": "ethernet"
                         }
                     ],
@@ -3070,7 +3075,7 @@
                 "properties": {
                     "interfaces": [
                         {
-                            "name": "enp25s0",
+                            "name": "enp3s0",
                             "special": false,
                             "type": "ethernet"
                         },
@@ -3080,6 +3085,11 @@
                             "type": "ethernet"
                         },
                         {
+                            "name": "tap1",
+                            "special": false,
+                            "type": "tap"
+                        },
+                        {
                             "name": "virbr0",
                             "special": true,
                             "type": "ethernet"
@@ -3087,6 +3097,11 @@
                         {
                             "name": "virbr0-nic",
                             "special": true,
+                            "type": "ethernet"
+                        },
+                        {
+                            "name": "wlp2s0",
+                            "special": false,
                             "type": "ethernet"
                         }
                     ],
@@ -3108,6 +3123,14 @@
                             "name": "TunnelCLient28",
                             "port_number": 2,
                             "rhost": "192.168.100.2",
+                            "rport": 20000,
+                            "type": "udp"
+                        },
+                        {
+                            "lport": 30000,
+                            "name": "UDP tunnel 1",
+                            "port_number": 3,
+                            "rhost": "10.100.77.199",
                             "rport": 20000,
                             "type": "udp"
                         }
@@ -3140,7 +3163,7 @@
                 "properties": {
                     "interfaces": [
                         {
-                            "name": "enp25s0",
+                            "name": "enp3s0",
                             "special": false,
                             "type": "ethernet"
                         },
@@ -3157,6 +3180,11 @@
                         {
                             "name": "virbr0-nic",
                             "special": true,
+                            "type": "ethernet"
+                        },
+                        {
+                            "name": "wlp2s0",
+                            "special": false,
                             "type": "ethernet"
                         }
                     ],

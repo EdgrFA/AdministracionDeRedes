@@ -10,6 +10,7 @@ Licensed under MIT License. See LICENSE.
 
 import argparse
 from collections import namedtuple
+from datetime import date
 import queue
 import gzip
 import json
@@ -168,7 +169,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="A sample netflow collector.")
     parser.add_argument("--host", type=str, default="0.0.0.0",
                         help="collector listening address")
-    parser.add_argument("--port", "-p", type=int, default=2055,
+    parser.add_argument("--port", "-p", type=int, default=9000,
                         help="collector listener port")
     parser.add_argument("--file", "-o", type=str, dest="output_file",
                         default="flows.gz",
@@ -198,9 +199,13 @@ if __name__ == "__main__":
         # This also means that the files have to be handled differently, because they are gzipped and not formatted as
         # one single big JSON dump, but rather many little JSON dumps, separated by line breaks.
         for ts, client, export in get_export_packets(args.host, args.port):
+            fecha = date.today()
             data = {
                 "client": client[0],
-                "flows": [flow.data for flow in export.flows]
+                "year" : str(fecha.year),
+                "month" : str(fecha.month),
+                "day" : str(fecha.day),
+                "flows" : [flow.data for flow in export.flows]
             }
             line = json.dumps(data).encode() + b"\n"  # byte encoded line
             with gzip.open(args.output_file, "ab") as fh:  # open as append, not reading the whole file

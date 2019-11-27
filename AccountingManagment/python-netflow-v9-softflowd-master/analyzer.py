@@ -11,7 +11,6 @@ Licensed under MIT License. See LICENSE.
 import argparse
 from collections import namedtuple
 import contextlib
-from datetime import datetime
 import functools
 import gzip
 import ipaddress

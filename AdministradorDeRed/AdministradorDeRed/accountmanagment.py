@@ -29,7 +29,6 @@ class QueuingRequestHandler(socketserver.BaseRequestHandler):
     def handle(self):
         data = self.request[0]  # get content, [1] would be the socket
         self.server.queue.put(RawPacket(time.time(), self.client_address, data))
-        print("Received %d bytes of data from %s", len(data), self.client_address)
 
 
 class QueuingUDPListener(socketserver.ThreadingUDPServer):
@@ -41,7 +40,6 @@ class QueuingUDPListener(socketserver.ThreadingUDPServer):
 class NetFlowListener(threading.Thread):
 
     def __init__(self, host, port):
-        print("Starting the NetFlow listener on {}:{}".format(host, port)))
         self.output = queue.Queue()
         self.input = queue.Queue()
         self.server = QueuingUDPListener((host, port), self.input)
@@ -62,28 +60,9 @@ class NetFlowListener(threading.Thread):
                     pkt: RawPacket = self.input.get(block=True, timeout=0.5)
                 except queue.Empty:
                     continue
-
-                try:
-                    export = V5ExportPacket(pkt.data, templates)
-                except UnknownNetFlowVersion as e:
-                    logger.error("%s, ignoring the packet", e)
-                    continue
-                except TemplateNotRecognized:
-                    if time.time() - pkt.ts > PACKET_TIMEOUT:
-                        logger.warning("Dropping an old and undecodable v9 ExportPacket")
-                    else:
-                        to_retry.append(pkt)
-                        print("Failed to decode a v9 ExportPacket - will "
-                                     "re-attempt when a new template is discovered")
-                    continue
-
-                print("Processed a v%d ExportPacket with %d flows.",
-                             export.header.version, export.header.count)
-
+                export = V5ExportPacket(pkt.data)
+                print("Processed a v " + str(export.header.version) + " ExportPacket with " + str(export.header.count) + " flows.")
                 if export.header.version == 9 and export.contains_new_templates and to_retry:
-                    print("Received new template(s)")
-                    print("Will re-attempt to decode %d old v9 ExportPackets",
-                                 len(to_retry))
                     for p in to_retry:
                         self.input.put(p)
                     to_retry.clear()
@@ -94,7 +73,6 @@ class NetFlowListener(threading.Thread):
             self.server.server_close()
 
     def stop(self):
-        print("Shutting down the NetFlow listener")
         self._shutdown.set()
 
     def join(self, timeout=None):
@@ -113,21 +91,21 @@ def get_export_packets(host, port):
         listener.join()
 
 
-def netFlowService():
-
-    try:
-        for ts, client, export in get_export_packets("192.168.0.2", 9000):
-            fecha = date.today()
-            data = {
-                "client": client[0],
-                "year" : str(fecha.year),
-                "month" : str(fecha.month),
-                "day" : str(fecha.day),
-                "flows" : [flow.data for flow in export.flows]
-            }
-            line = json.dumps(data).encode() + b"\n"  # byte encoded line
-            with gzip.open(args.output_file, "ab") as fh:  # open as append, not reading the whole file
-                fh.write(line)
-    except KeyboardInterrupt:
-        print("Received KeyboardInterrupt, passing through")
-        pass
+#def netFlowService():
+path = 'AdministradorDeRed/utils/'
+try:
+    for ts, client, export in get_export_packets("192.168.0.2", 9000):
+        fecha = date.today()
+        data = {
+            "client": client[0],
+            "year" : str(fecha.year),
+            "month" : str(fecha.month),
+            "day" : str(fecha.day),
+            "flows" : [flow.data for flow in export.flows]
+        }
+        line = json.dumps(data).encode() + b"\n"  # byte encoded line
+        with gzip.open( path + str(client[0]) + ".gz", "ab") as fh:  # open as append, not reading the whole file
+            fh.write(line)
+except KeyboardInterrupt:
+    print("Received KeyboardInterrupt, passing through")
+    pass

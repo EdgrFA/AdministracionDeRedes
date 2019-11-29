@@ -1,6 +1,7 @@
 from confmanagment import getConfigFiles, getTelnetDevices, revisarCambios, descartarCambios, sobrescribirCambios
 from telnetconnection import conectar_telnet, obtener_subredes_telnet
 from flask import Flask, render_template, request, flash, abort
+from accountmutils import obtenerNerflowInfo
 import faultmanagment
 import pingpuller
 import threading
@@ -13,7 +14,7 @@ app = Flask(__name__)
 app.secret_key = "12345"
 filenameTopology = 'AdministradorDeRed/utils/topology.json'
 filenameDevicesConfig = 'AdministradorDeRed/utils/devicesConfigfile.json'
-
+netflowPath = 'AdministradorDeRed/netflow/'
 
 @app.route('/')
 def index():
@@ -144,8 +145,11 @@ def accountManagment():
         return render_template('account-managment.html')
     
     if request.method == 'POST':
-        pass
+        #Obtener lista del netflow con usuarios en cada interfaz
+        data = obtenerNerflowInfo(netflowPath)
+        return data
     return
+
 
 
 

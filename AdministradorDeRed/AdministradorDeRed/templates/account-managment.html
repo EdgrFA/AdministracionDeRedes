@@ -17,7 +17,36 @@
         <div id="main">
             <section id="contentConfigFiles" class="main">
                 <div id="configFiles" style="text-align: center">
-                    <h1 align='center'>Visualizar uso de ancho de banda por usuario:</h1>
+                    <h1 align='center'>Visualizar uso de ancho de banda con Netflow:</h1>
+                    CLiente: 
+                    <select name="interfaz" id=selectCliente">
+                        <option selected value="default"> Elige una opción </option>
+                            <optgroup label="R1"> 
+                            <option value="">192.168.0.1</option> 
+                        </optgroup> 
+                        <optgroup label="R2"> 
+                            <option value="10">192.168.2.1</option>
+                        </optgroup> 
+                    </select>
+                    <br>
+                    Usuario : 
+                    <select name="usuario" id="selectUsuario">
+                        <option value="1">192.168.0.2</option> 
+                        <option value="2">192.168.1.3</option> 
+                    </select>
+                    <br>
+                    Periodo : 
+                    <select name="periodo" id="selectPeriodo">
+                        <option value="1">2019-07</option> 
+                        <option value="2">2019-08</option> 
+                    </select>
+                    <br>
+                    <input type="submit" class="button primary" value="Graficar" id="btnGraficar">
+                </div>
+
+                <div id="graficaNetflow" style="text-align: center">
+                    <br>
+                    Aqui va la grafica
                 </div>
             </section>
         </div>
@@ -25,6 +54,52 @@
 
     <script type="text/javascript">
 
+    var data;
+
+    /*var btn = document.getElementById("actualizar");
+    btn.addEventListener("click", function() {
+        obtenerCLientes();
+    });*/
+
+    function obtenerCLientes() {
+        limpiarGrupos();
+
+        var ourRequest = new XMLHttpRequest();
+        ourRequest.open('POST', 'http://192.168.0.2:8080/accounting-managment');
+        ourRequest.onload = function() {
+            if (ourRequest.status == 200) {
+                data = JSON.parse(ourRequest.responseText);
+                renderData(data);
+            } else if (ourRequest.status == 404) {
+                
+            }
+        };
+        ourRequest.send();
+    }
+
+    function renderData(data){
+        console.log(data)
+        /*
+        var i, j, output = "";
+        for (i in data.dispositivo){
+            output += "> " + data.dispositivo[i].name;
+            output +=  ": [" + data.dispositivo[i].localip + "]";
+            output += "<br>";
+        }
+        document.getElementById('devices').insertAdjacentHTML("afterend", output);
+        console.log("Todo correcto")
+        */
+    }
+
+    function limpiarGrupos(){
+        $("#selectCliente").empty();
+        $("#selectUsuario").empty();
+        $("#selectPeriodo").empty();
+    }
+
+    window.onload = function(){
+        obtenerCLientes();
+    }
     </script>
 
     <!-- Scripts -->

@@ -143,7 +143,7 @@ def agregarUsuarioConsumo(usuario, paquetes, path):
         })
         with open(path + usuario, 'w') as json_data: 
             json.dump(data, json_data)
-
+            
 
 def netFlowService(host, port, netflowPath):
     try:

@@ -138,5 +138,17 @@ def fileMonitor():
     return
 
 
+@app.route('/accounting-managment', methods=['GET', 'POST'])
+def accountManagment():
+    if request.method == 'GET':
+        return render_template('account-managment.html')
+    
+    if request.method == 'POST':
+        pass
+    return
+
+
+
+
 if __name__ == '__main__':
     app.run(host="192.168.0.2", port=int("8080"), debug=True)

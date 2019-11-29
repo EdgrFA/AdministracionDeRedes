@@ -17,13 +17,14 @@ import sys
 import socketserver
 import threading
 import time
+import os
 
 from v5 import V5ExportPacket
 
 PACKET_TIMEOUT = 60 * 60
 
 RawPacket = namedtuple('RawPacket', ['ts', 'client', 'data'])
-
+filenameDevicesConfig = 'AdministradorDeRed/utils/devicesConfigfile.json'
 
 class QueuingRequestHandler(socketserver.BaseRequestHandler):
     def handle(self):
@@ -90,22 +91,98 @@ def get_export_packets(host, port):
         listener.stop()
         listener.join()
 
+def obtenerListaDispositivos():
+    #Obtener lista de dispositivos
+    try:
+        with open(filenameDevicesConfig, 'r') as json_data:
+            devices = json.load(json_data)
+            return devices
+    except Exception as e:
+        print('no fue posible leer la lista de dispositivos' + str(e))
+    return None
 
-#def netFlowService():
-path = 'AdministradorDeRed/utils/'
-try:
-    for ts, client, export in get_export_packets("192.168.0.2", 9000):
-        fecha = date.today()
-        data = {
-            "client": client[0],
-            "year" : str(fecha.year),
-            "month" : str(fecha.month),
-            "day" : str(fecha.day),
-            "flows" : [flow.data for flow in export.flows]
-        }
-        line = json.dumps(data).encode() + b"\n"  # byte encoded line
-        with gzip.open( path + str(client[0]) + ".gz", "ab") as fh:  # open as append, not reading the whole file
-            fh.write(line)
-except KeyboardInterrupt:
-    print("Received KeyboardInterrupt, passing through")
-    pass
+def buscarRouter(interfaz):
+    devices = obtenerListaDispositivos()
+    router = None
+    for device in devices['dispositivo']:
+        for ip in device['localip']:
+            if ip == interfaz:
+                router = device
+                return router
+
+
+def agregarUsuarioConsumo(usuario, paquetes, path):
+    fecha = date.today()
+    try:
+        with open(path + usuario, 'r') as json_data:
+            data = json.load(json_data)
+            nuevoDia = True
+            for registro in data['registro']:
+                if str(fecha.day) == registro['day']: ##### Parse ???
+                    registro['paquetes'] = str(int(registro['paquetes']) + paquetes)
+                    nuevoDia = False
+                    break
+
+            if nuevoDia:
+                data['registro'].append({
+                    'año' : str(fecha.year),
+                    'month' : str(fecha.month),
+                    'day' : str(fecha.day),
+                    'paquetes' : str(registro['paquetes'])
+                })
+            with open(path + usuario, 'w+') as json_data: 
+                json.dump(data, json_data)
+    except:
+        data = {}
+        data['registro'] = []
+        data['registro'].append({
+            'year' : str(fecha.year),
+            'month' : str(fecha.month),
+            'day' : str(fecha.day),
+            'paquetes' : str(paquetes)
+        })
+        with open(path + usuario, 'w') as json_data: 
+            json.dump(data, json_data)
+
+
+def netFlowService(host, port, netflowPath):
+    try:
+        for ts, client, export in get_export_packets(host, port):
+            path = netflowPath
+            fecha = date.today()
+            #Buscar de quien es la interfaz que se recibio
+            router = buscarRouter(client[0])
+            #Organizar datos por router y luego interfaz 
+            if not os.path.isdir(path):
+                os.mkdir(path)
+            path = path + router['name']
+            if not os.path.isdir(path):
+                os.mkdir(path)
+            path = path + '/' + client[0]
+            if not os.path.isdir(path):
+                os.mkdir(path)
+            path = path + '/'
+            
+            usuarios = None
+            try:
+                with open(path, 'r') as json_data:
+                    usuarios = json.load(json_data)
+            except:
+                usuarios = {}
+                usuarios['usuario'] = []
+
+            #Obtener numero de paquetes por usuario
+            for flow in export.flows:
+                f = flow.data
+                if client[0] != f['IPV4_SRC_ADDR']:
+                    agregarUsuarioConsumo(f['IPV4_SRC_ADDR'], int(f['IN_PACKETS']), path)
+                if client[0] != f['IPV4_DST_ADDR']:
+                    agregarUsuarioConsumo(f['IPV4_DST_ADDR'], int(f['IN_PACKETS']), path)
+
+            print('Cliente: ' + router['name'] + ': ' + client[0])
+    except KeyboardInterrupt:
+        print("Received KeyboardInterrupt, passing through")
+        pass
+
+#Este programa se debe ejecutar como demonio para que funcione el sistema
+netFlowService(host="192.168.0.2", port = 9000, netflowPath = 'AdministradorDeRed/netflow/')

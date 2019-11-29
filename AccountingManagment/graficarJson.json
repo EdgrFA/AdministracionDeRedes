@@ -1,0 +1,38 @@
+{
+	"cliente": "192.168.0.1",
+	"usuario": "192.168.28.2",
+	"year": "2019",
+	"month": "11",
+	"consumodia": [{
+			"day": "1",
+			"paquetes": "2637256"
+		}, {
+			"day": "2",
+			"paquetes": "2534356"
+		}, {
+			"day": "3",
+			"paquetes": "2133456"
+		}, {
+			"day": "4",
+			"paquetes": "1634356"
+		}, {
+			"day": "5",
+			"paquetes": "3636356"
+		}, {
+			"day": "6",
+			"paquetes": "16356"
+		}, {
+			"day": "7",
+			"paquetes": "2636356"
+		}, {
+			"day": "8",
+			"paquetes": "36356"
+		}, {
+			"day": "9",
+			"paquetes": "636356"
+		}, {
+			"day": "10",
+			"paquetes": "6636356"
+		}
+	]
+}

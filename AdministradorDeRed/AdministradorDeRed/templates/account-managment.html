@@ -5,7 +5,16 @@
     <title>Accounting Managment</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<link rel="stylesheet" href="static/css/main.css" />
+    <link rel="stylesheet" href="static/css/main.css" />
+    
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+
+    <link rel="stylesheet" href="static/css/morris.css">
+    <script src="static/js/morris.min.js" charset="utf-8"></script>
+    
+
 	<noscript><link rel="stylesheet" href="static/css/noscript.css" /></noscript>
 </head>
 <body class="is-preload">
@@ -19,34 +28,23 @@
                 <div id="configFiles" style="text-align: center">
                     <h1 align='center'>Visualizar uso de ancho de banda con Netflow:</h1>
                     CLiente:
-                    <select name="interfaz" id=selectCliente">
-                        <option selected value="default"> Elige una opción </option>
-                            <optgroup label="R1">
-                            <option value="">192.168.0.1</option>
-                        </optgroup>
-                        <optgroup label="R2">
-                            <option value="10">192.168.2.1</option>
-                        </optgroup>
-                    </select>
+                    <select name="interfaz" id="selectCliente" onchange="obtenerUsuarios()"></select>
                     <br>
                     Usuario :
-                    <select name="usuario" id="selectUsuario">
-                        <option value="1">192.168.0.2</option>
-                        <option value="2">192.168.1.3</option>
-                    </select>
+                    <select name="usuario" id="selectUsuarios" onchange="obtenerFechas()"></select>
                     <br>
-                    Periodo :
-                    <select name="periodo" id="selectPeriodo">
-                        <option value="1">2019-07</option>
-                        <option value="2">2019-08</option>
-                    </select>
+                    Fecha :
+                    <select name="fecha" id="selectFechas"></select>
                     <br>
-                    <input type="submit" class="button primary" value="Graficar" id="btnGraficar">
+                    <input type="submit" class="button primary" value="Graficar" id="btnGraficar" onclick="obtenerGrafica()">
                 </div>
-
+            </section>
+            <section id="grafica" class="main">
+                <div style="text-align: center">
+                        <h1 align='center'>Consumo de kb por horas</h1>
+                
                 <div id="graficaNetflow" style="text-align: center">
-                    <br>
-                    <img src="hola.png">
+                </div>
                 </div>
             </section>
         </div>
@@ -54,22 +52,18 @@
 
     <script type="text/javascript">
 
-    var data;
-
     /*var btn = document.getElementById("actualizar");
     btn.addEventListener("click", function() {
         obtenerCLientes();
     });*/
 
     function obtenerCLientes() {
-        limpiarGrupos();
-
         var ourRequest = new XMLHttpRequest();
         ourRequest.open('POST', 'http://192.168.0.2:8080/accounting-managment');
         ourRequest.onload = function() {
             if (ourRequest.status == 200) {
-                data = JSON.parse(ourRequest.responseText);
-                renderData(data);
+                var clientes = JSON.parse(ourRequest.responseText);
+                renderClientes(clientes);
             } else if (ourRequest.status == 404) {
 
             }
@@ -77,38 +71,154 @@
         ourRequest.send();
     }
 
-    function renderData(data){
-        console.log(data)
-        /*
-        var i, j, output = "";
-        for (i in data.dispositivo){
-            output += "> " + data.dispositivo[i].name;
-            output +=  ": [" + data.dispositivo[i].localip + "]";
-            output += "<br>";
+    function obtenerUsuarios(){
+        nodeCliente = document.getElementById('selectCliente');
+        if(nodeCliente.value.localeCompare('default') == 0){
+            $("#selectUsuarios").empty();
+            $("#selectFechas").empty();
+            return;
         }
-        document.getElementById('devices').insertAdjacentHTML("afterend", output);
-        console.log("Todo correcto")
-        */
+        var params = 'consulta=usuarios' + '&' + 'dato=' + nodeCliente.value;
+
+        var ourRequest = new XMLHttpRequest();
+        ourRequest.open('GET', 'http://192.168.0.2:8080/netflow' + '?' + params);
+        ourRequest.onload = function() {
+            if (ourRequest.status == 200) {
+                var usuarios = JSON.parse(ourRequest.responseText);
+                renderUsuarios(usuarios, nodeCliente.value);
+            } else if (ourRequest.status == 404) {
+
+            }
+        };
+        ourRequest.send();
     }
 
-    function limpiarGrupos(){
+    function obtenerFechas(){
+        nodeUsuario = document.getElementById('selectUsuarios');
+        if(nodeUsuario.value.localeCompare('default') == 0){
+            $("#selectFechas").empty();
+            return;
+        }
+        var params = 'consulta=fechas' + '&' + 'dato=' + nodeUsuario.value;
+
+        var ourRequest = new XMLHttpRequest();
+        ourRequest.open('GET', 'http://192.168.0.2:8080/netflow' + '?' + params);
+        ourRequest.onload = function() {
+            if (ourRequest.status == 200) {
+                var fechas = JSON.parse(ourRequest.responseText);
+                renderFechas(fechas, nodeUsuario.value);
+            } else if (ourRequest.status == 404) {
+
+            }
+        };
+        ourRequest.send();
+    }
+
+    function renderClientes(clientes){
         $("#selectCliente").empty();
-        $("#selectUsuario").empty();
-        $("#selectPeriodo").empty();
+        $("#selectUsuarios").empty();
+        $("#selectFechas").empty();
+
+        var rtr;
+        var dataSelectCliente = "<option selected value='default'> Elige una opción </option>";
+        for (rtr in clientes.router){
+            dataSelectCliente += "<optgroup label='" + clientes.router[rtr].nombre + "'>";
+            dataSelectCliente += "<option value='" + clientes.router[rtr].nombre + "/" + clientes.router[rtr].cliente + "'>";
+            dataSelectCliente += clientes.router[rtr].cliente + "</option></optgroup>";
+        }
+        document.getElementById('selectCliente').insertAdjacentHTML("beforeend", dataSelectCliente);
+    }
+
+    function renderUsuarios(usuarios, path){
+        $("#selectUsuarios").empty();
+        $("#selectFechas").empty();
+
+        var usrs;
+        var dataSelectUsuarios = "<option selected value='default'> Elige una opción </option>";
+        for (usrs in usuarios){
+            dataSelectUsuarios += "<option value='" + path + "/" + usuarios[usrs] + "'>";
+            dataSelectUsuarios += usuarios[usrs] + "</option></optgroup>";
+        }
+        document.getElementById('selectUsuarios').insertAdjacentHTML("beforeend", dataSelectUsuarios);
+    }
+
+    function renderFechas(fechas){
+        $("#selectFechas").empty();
+
+        var fch;
+        var dataSelectFechas = "<option selected value='default'> Elige una opción </option>";
+        for (fch in fechas){
+            dataSelectFechas += "<option value='" + fechas[fch] + "'>";
+            dataSelectFechas += fechas[fch] + "</option></optgroup>";
+        }
+        document.getElementById('selectFechas').insertAdjacentHTML("beforeend", dataSelectFechas);
+    }
+
+    function obtenerGrafica(){
+        usuarioValue = document.getElementById('selectUsuarios').value;
+        fechaValue = document.getElementById('selectFechas').value;
+
+
+        var ourRequest = new XMLHttpRequest();
+        ourRequest.open('POST', 'http://192.168.0.2:8080/netflow');
+        ourRequest.onload = function() {
+            if (ourRequest.status == 200) {
+                var datos = JSON.parse(ourRequest.responseText);
+                renderGrafica(datos);
+            } else if (ourRequest.status == 404) {
+
+            }
+        };
+        var data = new FormData();
+        data.append('usuario', usuarioValue);
+        data.append('fecha', fechaValue);
+        ourRequest.send(data);
     }
 
     window.onload = function(){
         obtenerCLientes();
     }
+
+
+    function renderGrafica(datos){
+        $("#graficaNetflow").empty();
+        /*var info = new Array();
+        for(hr in datos){
+            info.push( datos[hr].x
+            datos[hr].y
+        }*/
+
+        new Morris.Area({
+            // ID of the element in which to draw the chart.
+            element: 'graficaNetflow',
+            parseTime: false,
+            // Chart data records -- each entry in this array corresponds to a point on
+            // the chart.
+            data: datos,
+            // The name of the data record attribute that contains x-values.
+            xkey: 'hour',
+            // A list of names of data record attributes that contain y-values.
+            ykeys: ['kb'],
+            // Labels for the ykeys -- will be displayed when you hover over the
+            // chart.
+            labels: ['kb']
+        });
+    }
+    </script>
+
+    <script type="text/javascript">
+
+
+
     </script>
 
     <!-- Scripts -->
     <script src="static/js/jquery.min.js"></script>
-		<script src="static/js/jquery.scrollex.min.js"></script>
-		<script src="static/js/jquery.scrolly.min.js"></script>
-		<script src="static/js/browser.min.js"></script>
-		<script src="static/js/breakpoints.min.js"></script>
-		<script src="static/js/util.js"></script>
-		<script src="static/js/main.js"></script>
+    <script src="static/js/jquery.scrollex.min.js"></script>
+    <script src="static/js/jquery.scrolly.min.js"></script>
+    <script src="static/js/browser.min.js"></script>
+    <script src="static/js/breakpoints.min.js"></script>
+    <script src="static/js/util.js"></script>
+    <script src="static/js/main.js"></script>
   </body>
 </html>

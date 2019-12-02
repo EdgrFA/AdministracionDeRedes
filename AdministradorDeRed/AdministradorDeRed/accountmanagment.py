@@ -8,7 +8,7 @@ Licensed under MIT License. See LICENSE.
 
 import argparse
 from collections import namedtuple
-from datetime import date
+from datetime import date, datetime
 import queue
 import gzip
 import json
@@ -113,22 +113,36 @@ def buscarRouter(interfaz):
 
 def agregarUsuarioConsumo(usuario, paquetes, path):
     fecha = date.today()
+    now = datetime.now()
     try:
         with open(path + usuario, 'r') as json_data:
             data = json.load(json_data)
+            #Revisar fechas registradas
             nuevoDia = True
             for registro in data['registro']:
-                if str(fecha.day) == registro['day']: ##### Parse ???
-                    registro['paquetes'] = str(int(registro['paquetes']) + paquetes)
+                if str(fecha) == str(registro['fecha']):
+                    #Revisar horas registradas
+                    nuevaHora = True
+                    for consumo in registro['consumo']:
+                        if str(now.hour) == str(consumo['hora']):
+                            consumo['paquetes'] = str(int(consumo['paquetes']) + paquetes)
+                            nuevaHora = False
+                            break
+                    if nuevaHora:
+                        registro['consumo'].append({
+                            'hora' : str(now.hour),
+                            'paquetes' : str(paquetes)
+                        })
                     nuevoDia = False
                     break
 
             if nuevoDia:
                 data['registro'].append({
-                    'año' : str(fecha.year),
-                    'month' : str(fecha.month),
-                    'day' : str(fecha.day),
-                    'paquetes' : str(registro['paquetes'])
+                    'fecha' : str(fecha.year),
+                    'consumo' : [{
+                        'hora' : str(now.hour),
+                        'paquetes' : str(paquetes)
+                    }]
                 })
             with open(path + usuario, 'w+') as json_data: 
                 json.dump(data, json_data)
@@ -136,10 +150,11 @@ def agregarUsuarioConsumo(usuario, paquetes, path):
         data = {}
         data['registro'] = []
         data['registro'].append({
-            'year' : str(fecha.year),
-            'month' : str(fecha.month),
-            'day' : str(fecha.day),
-            'paquetes' : str(paquetes)
+            'fecha' : str(fecha),
+            'consumo' : [{
+                'hora' : str(now.hour),
+                'paquetes' : str(paquetes)
+            }]
         })
         with open(path + usuario, 'w') as json_data: 
             json.dump(data, json_data)

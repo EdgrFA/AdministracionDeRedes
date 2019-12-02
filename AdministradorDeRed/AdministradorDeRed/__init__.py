@@ -1,7 +1,7 @@
 from confmanagment import getConfigFiles, getTelnetDevices, revisarCambios, descartarCambios, sobrescribirCambios
 from telnetconnection import conectar_telnet, obtener_subredes_telnet
 from flask import Flask, render_template, request, flash, abort
-from accountmutils import obtenerNerflowInfo
+from accountmutils import obtenerNeflowClients, obtenerUsuarios, obtenerFechas, obtenerRegistro
 import faultmanagment
 import pingpuller
 import threading
@@ -146,7 +146,27 @@ def accountManagment():
     
     if request.method == 'POST':
         #Obtener lista del netflow con usuarios en cada interfaz
-        data = obtenerNerflowInfo(netflowPath)
+        data = obtenerNeflowClients(netflowPath)
+        return data
+    return
+
+
+@app.route('/netflow', methods=['GET', 'POST'])
+def netflowInfo():
+    if request.method == 'GET':
+        tipo = request.args.get('consulta')
+        dato = request.args.get('dato')
+        data = None
+        if(tipo == 'usuarios'):
+            data = obtenerUsuarios(netflowPath + dato + '/')  
+        else:
+            data = obtenerFechas(netflowPath + dato)
+        return data
+    if request.method == 'POST':
+        pathUsuario = request.form['usuario']
+        fecha = request.form['fecha']
+        data = obtenerRegistro(netflowPath + pathUsuario, fecha)
+        print(str(data))
         return data
     return
 

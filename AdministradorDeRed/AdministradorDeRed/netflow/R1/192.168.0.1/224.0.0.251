@@ -1,1 +1,1 @@
-{"registro": [{"year": "2019", "month": "11", "day": "29", "paquetes": "1"}]}
+{"registro": [{"fecha": "2019-12-02", "consumo": [{"hora": "1", "paquetes": "1"}, {"hora": "2", "paquetes": "30"}, {"hora": "3", "paquetes": "3"}, {"hora": "4", "paquetes": "1"}, {"hora": "5", "paquetes": "31"}, {"hora": "6", "paquetes": "6"}]}]}
